@@ -36,3 +36,132 @@
     transform: rotate(360deg);
   }
 }
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 0;
+  padding: 20px;
+  background-color: #f0f4f8;
+  line-height: 1.6;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+h1, h2 {
+  text-align: center;
+  color: #2c3e50;
+}
+.level-buttons {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.level-buttons button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.level-buttons button:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+#exercise-container {
+  margin-top: 30px;
+}
+.exercise {
+  background-color: #ecf0f1;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.exercise p {
+font-size: 18px;
+}
+.exercise:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.exercise h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+.answer {
+  display: none;
+  margin-top: 15px;
+  background-color: #e8f5e9;
+  padding: 15px;
+  border-radius: 5px;
+
+}
+.show-answer-btn {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+.show-answer-btn:hover {
+  background-color: #27ae60;
+  transform: scale(1.05);
+}
+#num-exercises, #countdown-time, #exercise-type {
+  width: 100px;
+  font-size: 16px;
+  margin: 5px;
+  padding: 8px;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+#num-exercises:focus, #countdown-time:focus, #exercise-type:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+.math-expression {
+  font-size: 1.3em;
+}
+#countdown-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #34495e;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+#countdown {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+#countdown.expired {
+  color: #e74c3c;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.exercise {
+  animation: fadeIn 0.5s ease-in-out;
+}
