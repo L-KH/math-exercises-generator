@@ -1,6 +1,6 @@
 {
   "name": "math-exercises-generator",
-  "homepage": "https://L-KH.github.io/math-exercises-generator",
+ "homepage": "https://L-KH.github.io/math-exercises-generator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
