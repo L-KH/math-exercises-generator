@@ -89,7 +89,7 @@ h1, h2 {
   transition: all 0.3s ease;
 }
 .exercise p {
-font-size: 18px;
+font-size: 28px;
 }
 .exercise:hover {
   transform: translateY(-5px);

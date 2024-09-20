@@ -133,7 +133,7 @@ const countdownInterval = setInterval(function () {
                 }
               }
             }
-            exercise.questionText = 'Simplify:';
+            exercise.questionText = '';
             return exercise;
           }
           
