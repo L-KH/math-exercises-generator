@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import MathJax from 'mathjax';
+import { MathJax } from 'better-react-mathjax';
 
 const Exercise = ({ exercise, index }) => {
   const [showAnswer, setShowAnswer] = useState(false);
