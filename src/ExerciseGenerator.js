@@ -449,97 +449,88 @@ return { question, answer };
 }
 
 function ExerciseGenerator() {
-    const [exercises, setExercises] = useState([]);
-    const [numExercises, setNumExercises] = useState(30);
-    const [useCountdown, setUseCountdown] = useState(true);
-    const [countdownTime, setCountdownTime] = useState(300);
-    const [exerciseType, setExerciseType] = useState('both');
-    const [key, setKey] = useState(0); // Add this line
+  const [exercises, setExercises] = useState([]);
+  const [numExercises, setNumExercises] = useState(30);
+  const [useCountdown, setUseCountdown] = useState(true);
+  const [countdownTime, setCountdownTime] = useState(300);
+  const [exerciseType, setExerciseType] = useState('both');
+  const [key, setKey] = useState(0);
 
-    const generateExercises = useCallback((level) => {
-      const newExercises = [];
-      for (let i = 0; i < numExercises; i++) {
-        newExercises.push(createExercise(level, exerciseType));
-      }
-      setExercises(newExercises);
-      setKey(prevKey => prevKey + 1);
-    }, [numExercises, exerciseType]);
-  
-    return (
-        <div className="container">
-          <h1>Math Exercises Generator</h1>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                type="number"
-                value={numExercises}
-                onChange={(e) => setNumExercises(Number(e.target.value))}
-                label="Number of Exercises"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <FormControlLabel
-                control={<Checkbox checked={useCountdown} onChange={(e) => setUseCountdown(e.target.checked)} />}
-                label="Use Countdown Timer"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                type="number"
-                value={countdownTime}
-                onChange={(e) => setCountdownTime(Number(e.target.value))}
-                label="Countdown Time (seconds)"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Select
-                fullWidth
-                value={exerciseType}
-                onChange={(e) => setExerciseType(e.target.value)}
-                label="Exercise Type"
-              >
-                <MenuItem value="both">Les deux</MenuItem>
-                <MenuItem value="expand">Developpement</MenuItem>
-                <MenuItem value="factor">Factorisation</MenuItem>
-              </Select>
-            </Grid>
+  const generateExercises = useCallback((level) => {
+    const newExercises = [];
+    for (let i = 0; i < numExercises; i++) {
+      newExercises.push(createExercise(level, exerciseType));
+    }
+    setExercises(newExercises);
+    setKey(prevKey => prevKey + 1);
+  }, [numExercises, exerciseType]);
+
+  return (
+      <div className="container">
+        <h1>Math Exercises Generator</h1>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              type="number"
+              value={numExercises}
+              onChange={(e) => setNumExercises(Number(e.target.value))}
+              label="Number of Exercises"
+            />
           </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControlLabel
+              control={<Checkbox checked={useCountdown} onChange={(e) => setUseCountdown(e.target.checked)} />}
+              label="Use Countdown Timer"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              type="number"
+              value={countdownTime}
+              onChange={(e) => setCountdownTime(Number(e.target.value))}
+              label="Countdown Time (seconds)"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Select
+              fullWidth
+              value={exerciseType}
+              onChange={(e) => setExerciseType(e.target.value)}
+              label="Exercise Type"
+            >
+              <MenuItem value="both">Les deux</MenuItem>
+              <MenuItem value="expand">Developpement</MenuItem>
+              <MenuItem value="factor">Factorisation</MenuItem>
+            </Select>
+          </Grid>
+        </Grid>
         <div className="level-buttons" style={{ marginTop: '20px' }}>
-        {[1, '1-2', 2, '2-2', 3, 4, 5, 'IR'].map((level) => (
-          <Button
-            key={level}
-            onClick={() => generateExercises(level)}
-            variant="contained"
-            style={{
-              margin: '5px',
-              background: levelColors[level],
-              opacity: level === 'IR' ? 0.7 : 1,
-            }}
-          >
-            Level {level}
-          </Button>
-        ))}
-      </div>
-      <div id="exercise-container">
-        {exercises.map((exercise, index) => (
-          <Exercise key={`${key}-${index}`} exercise={exercise} index={index} />
-        ))}
-      </div>
-  
-        {useCountdown && <Countdown initialTime={countdownTime} />}
-  
-        <div id="exercise-container">
-          {exercises.map((exercise, index) => (
-            <Exercise key={index} exercise={exercise} index={index} />
+          {[1, '1-2', 2, '2-2', 3, 4, 5, 'IR'].map((level) => (
+            <Button
+              key={level}
+              onClick={() => generateExercises(level)}
+              variant="contained"
+              style={{
+                margin: '5px',
+                background: levelColors[level],
+                opacity: level === 'IR' ? 0.7 : 1,
+              }}
+            >
+              Level {level}
+            </Button>
           ))}
         </div>
-  
+        {useCountdown && <Countdown initialTime={countdownTime} />}
+        <div id="exercise-container">
+          {exercises.map((exercise, index) => (
+            <Exercise key={`${key}-${index}`} exercise={exercise} index={index} />
+          ))}
+        </div>
         <Button onClick={() => window.print()}>Print Exercises</Button>
       </div>
-    );
-  }
-  
-  export default ExerciseGenerator;
-  
+  );
+}
+
+export default ExerciseGenerator;
