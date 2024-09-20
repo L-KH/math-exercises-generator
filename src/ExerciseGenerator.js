@@ -1,52 +1,65 @@
 import React, { useState, useCallback } from 'react';
 import Exercise from './Exercise';
 import Countdown from './Countdown';
-import { Button, TextField, Checkbox, FormControlLabel, Select, MenuItem, Grid } from '@mui/material';
-
+import { Button, TextField, Checkbox, FormControlLabel, Select, MenuItem, Grid , Card, CardContent} from '@mui/material';
+import QuizCard from './QuizCard';
+import Quiz from './Quiz';
 
 
  
 
 
 const levelColors = {
-    1: '#a8e6cf',
-    '1-2': '#1de9b6',
-    2: '#fff176',
-    '2-2': '#ffd54f',
-    3: '#64b5f6',
-    4: '#42a5f5',
-    5: '#7e57c2',
+    1: '#d8ebff',
+    '1-2': '#d3e8ff',
+    2: '#89c4ff',
+    '2-2': '#7dbeff',
+    3: '#0080ff',
+    4: '#004589',
+    5: '#001e3b',
     'IR': 'linear-gradient(45deg, #0015ff 0%, #ff0073 99%, #a6ff00 100%)'
   };
 
 
 
-        function createExercise(level, exerciseType) {
-            let exercise;
-            if (level === 1) {
-              exercise = level1();
-            } else if (level === '1-2') {
-              exercise = level1_2();
-            } else if (level === '2-2') {
-              exercise = level2_2();
-            } else if (level === 'IR') {
-              exercise = irExercises(exerciseType);
-            } else {
-              if (exerciseType === 'expand') {
-                exercise = createExpansionExercise(level);
-              } else if (exerciseType === 'factor') {
-                exercise = createFactorizationExercise(level);
-              } else {
-                if (Math.random() < 0.5) {
-                  exercise = createExpansionExercise(level);
-                } else {
-                  exercise = createFactorizationExercise(level);
-                }
-              }
-            }
-            exercise.questionText = '';
-            return exercise;
-          }
+  function createExercise(level, exerciseType) {
+    let exercise;
+    let questionText = '';
+  
+    if (level === 1) {
+      exercise = level1();
+    } else if (level === '1-2') {
+      exercise = level1_2();
+    } else if (level === '2-2') {
+      exercise = level2_2();
+    } else if (level === 'IR') {
+      exercise = irExercises(exerciseType);
+    } else {
+      if (exerciseType === 'expand') {
+        exercise = createExpansionExercise(level);
+        questionText = 'Développer:';
+      } else if (exerciseType === 'factor') {
+        exercise = createFactorizationExercise(level);
+        questionText = 'factoriser:';
+      } else {
+        if (Math.random() < 0.5) {
+          exercise = createExpansionExercise(level);
+          questionText = 'Développer:';
+        } else {
+          exercise = createFactorizationExercise(level);
+          questionText = 'Factoriser:';
+        }
+      }
+    }
+  
+    // Set questionText for levels 1, 1-2, 2-2, and IR
+    if (level === 1 || level === '1-2' || level === '2-2' || level === 'IR') {
+      questionText = exercise.type === 'expand' ? 'Develop:' : 'Factorize:';
+    }
+  
+    return { ...exercise, questionText };
+  }
+  
           
           
 
@@ -360,10 +373,12 @@ return { question, answer };
 function ExerciseGenerator() {
   const [exercises, setExercises] = useState([]);
   const [numExercises, setNumExercises] = useState(30);
-  const [useCountdown, setUseCountdown] = useState(true);
+  const [useCountdown, setUseCountdown] = useState(false);
   const [countdownTime, setCountdownTime] = useState(300);
   const [exerciseType, setExerciseType] = useState('both');
   const [key, setKey] = useState(0);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizDifficulty, setQuizDifficulty] = useState(null);
 
   const generateExercises = useCallback((level) => {
     const newExercises = [];
@@ -373,79 +388,101 @@ function ExerciseGenerator() {
     setExercises(newExercises);
     setKey(prevKey => prevKey + 1);
   }, [numExercises, exerciseType]);
+ const handleStartQuiz = (difficulty) => {
+    setQuizDifficulty(difficulty);
+    setShowQuiz(true);
+  };
 
+  const handleFinishQuiz = () => {
+    setShowQuiz(false);
+    setQuizDifficulty(null);
+  };
   return (
     <div className="container">
-      <h1>Math Exercises Generator</h1>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            type="number"
-            value={numExercises}
-            onChange={(e) => setNumExercises(Number(e.target.value))}
-            label="Number of Exercises"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={useCountdown}
-                onChange={(e) => setUseCountdown(e.target.checked)}
+      <Card sx={{ mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
+        <CardContent>
+          <h1>Math Exercises Generator</h1>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                type="number"
+                value={numExercises}
+                onChange={(e) => setNumExercises(Number(e.target.value))}
+                label="Number of Exercises"
               />
-            }
-            label="Use Countdown Timer"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            type="number"
-            value={countdownTime}
-            onChange={(e) => setCountdownTime(Number(e.target.value))}
-            label="Countdown Time (seconds)"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Select
-            fullWidth
-            value={exerciseType}
-            onChange={(e) => setExerciseType(e.target.value)}
-            label="Exercise Type"
-          >
-            <MenuItem value="both">Les deux</MenuItem>
-            <MenuItem value="expand">Developpement</MenuItem>
-            <MenuItem value="factor">Factorisation</MenuItem>
-          </Select>
-        </Grid>
-      </Grid>
-      <div className="level-buttons" style={{ marginTop: '20px' }}>
-        {[1, '1-2', 2, '2-2', 3, 4, 5, 'IR'].map((level) => (
-          <Button
-            key={level}
-            onClick={() => generateExercises(level)}
-            variant="contained"
-            style={{
-              margin: '5px',
-              background: levelColors[level],
-              opacity: level === 'IR' ? 0.7 : 1,
-            }}
-          >
-            Level {level}
-          </Button>
-        ))}
-      </div>
-      {useCountdown && <Countdown initialTime={countdownTime} />}
-      <div id="exercise-container">
-        {exercises.map((exercise, index) => (
-          <Exercise key={`${key}-${index}`} exercise={exercise} index={index} />
-        ))}
-      </div>
-      <Button onClick={() => window.print()}>Print Exercises</Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={useCountdown}
+                    onChange={(e) => setUseCountdown(e.target.checked)}
+                  />
+                }
+                label="Use Countdown Timer"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                type="number"
+                value={countdownTime}
+                onChange={(e) => setCountdownTime(Number(e.target.value))}
+                label="Countdown Time (seconds)"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Select
+                fullWidth
+                value={exerciseType}
+                onChange={(e) => setExerciseType(e.target.value)}
+                label="Exercise Type"
+              >
+                <MenuItem value="both">Les deux</MenuItem>
+                <MenuItem value="expand">Developpement</MenuItem>
+                <MenuItem value="factor">Factorisation</MenuItem>
+              </Select>
+            </Grid>
+          </Grid>
+          <div className="level-buttons" style={{ marginTop: '20px' }}>
+            {[1, '1-2', 2, '2-2', 3, 4, 5, 'IR'].map((level) => (
+              <Button
+                key={level}
+                onClick={() => generateExercises(level)}
+                variant="contained"
+                style={{
+                  margin: '5px',
+                  background: levelColors[level],
+                  opacity: level === 'IR' ? 0.7 : 1,
+                }}
+              >
+                Level {level}
+              </Button>
+            ))}
+          </div>
+          {useCountdown && <Countdown initialTime={countdownTime} />}
+          <div id="exercise-container">
+            {exercises.map((exercise, index) => (
+              <Exercise key={`${key}-${index}`} exercise={exercise} index={index} />
+            ))}
+          </div>
+          <Button onClick={() => window.print()}>Print Exercises</Button>
+        </CardContent>
+      </Card>
+
+      <Card sx={{ mb: 4, p: 2, backgroundColor: '#e6f7ff' }}>
+        <CardContent>
+          {!showQuiz ? (
+            <QuizCard onStartQuiz={handleStartQuiz} />
+          ) : (
+            <Quiz difficulty={quizDifficulty} onFinish={handleFinishQuiz} />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-
 export default ExerciseGenerator;
+export { createExpansionExercise, createFactorizationExercise, irExpansion, irFactorization };
