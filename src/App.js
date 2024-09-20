@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import ExerciseGenerator from './ExerciseGenerator';
 import './App.css';
 
+
 const theme = createTheme({
   palette: {
     primary: {

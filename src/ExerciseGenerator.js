@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Exercise from './Exercise';
 import Countdown from './Countdown';
 import { Button, TextField, Checkbox, FormControlLabel, Select, MenuItem, Grid } from '@mui/material';
+import MathJax from 'mathjax';
 
  
 
