@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ExerciseGenerator from './ExerciseGenerator';
 import './App.css';
+import { MathJaxContext } from 'better-react-mathjax'; // Add this import
 
 
 const theme = createTheme({
@@ -45,12 +46,14 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="App" style={{
-        minHeight: '100vh',
-        padding: '20px',
-      }}>
-        <ExerciseGenerator />
-      </div>
+      <MathJaxContext> {/* Add this wrapper */}
+        <div className="App" style={{
+          minHeight: '100vh',
+          padding: '20px',
+        }}>
+          <ExerciseGenerator />
+        </div>
+      </MathJaxContext>
     </ThemeProvider>
   );
 }

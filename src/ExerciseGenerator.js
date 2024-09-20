@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Exercise from './Exercise';
 import Countdown from './Countdown';
 import { Button, TextField, Checkbox, FormControlLabel, Select, MenuItem, Grid } from '@mui/material';
-import MathJax from 'mathjax';
+import { MathJax } from 'better-react-mathjax';
+
 
  
 
@@ -454,15 +455,15 @@ function ExerciseGenerator() {
     const [countdownTime, setCountdownTime] = useState(300);
     const [exerciseType, setExerciseType] = useState('both');
     const [key, setKey] = useState(0); // Add this line
-  
-    const generateExercises = (level) => {
+
+    const generateExercises = useCallback((level) => {
       const newExercises = [];
       for (let i = 0; i < numExercises; i++) {
         newExercises.push(createExercise(level, exerciseType));
       }
       setExercises(newExercises);
-      setKey(prevKey => prevKey + 1); // Add this line
-    };
+      setKey(prevKey => prevKey + 1);
+    }, [numExercises, exerciseType]);
   
     return (
         <div className="container">
