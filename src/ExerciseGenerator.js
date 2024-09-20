@@ -23,86 +23,57 @@ function renderMathJax(text) {
     return '<span class="math-expression">\\(' + text + '\\)</span>';
 }
 
- function generateExercises(level) {
-        const container = document.getElementById('exercise-container');
-        container.innerHTML = '';
-        let numExercises = document.getElementById('num-exercises').value;
-        numExercises = numExercises ? parseInt(numExercises) : 30;
-        const exerciseType = document.getElementById('exercise-type').value;
+//  function generateExercises(level) {
+//         const container = document.getElementById('exercise-container');
+//         container.innerHTML = '';
+//         let numExercises = document.getElementById('num-exercises').value;
+//         numExercises = numExercises ? parseInt(numExercises) : 30;
+//         const exerciseType = document.getElementById('exercise-type').value;
 
-        // Check if countdown should be used
-        const useCountdown = document.getElementById('use-countdown').checked;
-        if (useCountdown) {
-            const countdownTime = document.getElementById('countdown-time').value || 300;
-            startCountdown(countdownTime);
-        } else {
-            const countdownContainer = document.getElementById('countdown-container');
-            countdownContainer.style.display = 'none';
-        }
-                // Start the countdown
-        const countdownTime = document.getElementById('countdown-time').value || 300;
-        startCountdown(countdownTime);
+//         // Check if countdown should be used
+//         const useCountdown = document.getElementById('use-countdown').checked;
+//         if (useCountdown) {
+//             const countdownTime = document.getElementById('countdown-time').value || 300;
+//             startCountdown(countdownTime);
+//         } else {
+//             const countdownContainer = document.getElementById('countdown-container');
+//             countdownContainer.style.display = 'none';
+//         }
+//                 // Start the countdown
+//         const countdownTime = document.getElementById('countdown-time').value || 300;
+//         startCountdown(countdownTime);
 
-        for (let i = 0; i < numExercises; i++) {
-            let exerciseObj = createExercise(level, exerciseType);
-            let exerciseDiv = document.createElement('div');
-            exerciseDiv.className = 'exercise';
+//         for (let i = 0; i < numExercises; i++) {
+//             let exerciseObj = createExercise(level, exerciseType);
+//             let exerciseDiv = document.createElement('div');
+//             exerciseDiv.className = 'exercise';
 
-            let exerciseTitle = document.createElement('h3');
-            exerciseTitle.textContent = 'Exercise ' + (i + 1);
-            exerciseDiv.appendChild(exerciseTitle);
+//             let exerciseTitle = document.createElement('h3');
+//             exerciseTitle.textContent = 'Exercise ' + (i + 1);
+//             exerciseDiv.appendChild(exerciseTitle);
 
-            let questionP = document.createElement('p');
-            questionP.innerHTML = '<strong>' + exerciseObj.questionText + ' </strong> ' + renderMathJax(exerciseObj.question);
-            exerciseDiv.appendChild(questionP);
+//             let questionP = document.createElement('p');
+//             questionP.innerHTML = '<strong>' + exerciseObj.questionText + ' </strong> ' + renderMathJax(exerciseObj.question);
+//             exerciseDiv.appendChild(questionP);
 
-            let showAnswerBtn = document.createElement('button');
-            showAnswerBtn.textContent = 'Show Answer';
-            showAnswerBtn.className = 'show-answer-btn';
-            showAnswerBtn.onclick = function() {
-                answerDiv.style.display = 'block';
-                MathJax.typeset([answerDiv]);
-            };
-            exerciseDiv.appendChild(showAnswerBtn);
+//             let showAnswerBtn = document.createElement('button');
+//             showAnswerBtn.textContent = 'Show Answer';
+//             showAnswerBtn.className = 'show-answer-btn';
+//             showAnswerBtn.onclick = function() {
+//                 answerDiv.style.display = 'block';
+//                 MathJax.typeset([answerDiv]);
+//             };
+//             exerciseDiv.appendChild(showAnswerBtn);
 
-            let answerDiv = document.createElement('div');
-            answerDiv.className = 'answer';
-            answerDiv.innerHTML = '<strong>Answer:</strong> ' + renderMathJax(exerciseObj.answer);
-            exerciseDiv.appendChild(answerDiv);
+//             let answerDiv = document.createElement('div');
+//             answerDiv.className = 'answer';
+//             answerDiv.innerHTML = '<strong>Answer:</strong> ' + renderMathJax(exerciseObj.answer);
+//             exerciseDiv.appendChild(answerDiv);
 
-            container.appendChild(exerciseDiv);
-        }
-        MathJax.typeset();
-    }
-function startCountdown(duration) {
-const countdownContainer = document.getElementById('countdown-container');
-const countdownElement = document.getElementById('countdown');
-
-if (!document.getElementById('use-countdown').checked) {
-    countdownContainer.style.display = 'none';
-    return;
-}
-
-countdownContainer.style.display = 'block';
-countdownElement.classList.remove('expired');
-countdownElement.style.color = '#fff'; // Reset color
-
-const countdownInterval = setInterval(function () {
-    const minutes = parseInt(timer / 60, 10);
-    const seconds = parseInt(timer % 60, 10);
-
-    countdownElement.textContent = minutes + "m " + (seconds < 10 ? '0' + seconds : seconds) + "s";
-
-    if (--timer < 0) {
-        clearInterval(countdownInterval);
-        countdownElement.classList.add('expired');
-        countdownElement.textContent = "Time's up!";
-        countdownElement.style.color = '#e74c3c';
-        alert("Time's up!");
-    }
-}, 1000);
-}
-
+//             container.appendChild(exerciseDiv);
+//         }
+//         MathJax.typeset();
+//     }
 
         // Function to count negative time
         function countNegative(element) {
