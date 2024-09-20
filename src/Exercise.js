@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { MathJax } from 'better-react-mathjax';
 import { Button, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import MathJax from 'mathjax';
