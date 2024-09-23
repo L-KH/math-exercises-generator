@@ -23,88 +23,141 @@ import {
     }, [difficulty]);
   
     const generateQuestions = (difficulty) => {
-        const numQuestions = 20;
-        const generatedQuestions = [];
+      const numQuestions = 20;
+      const generatedQuestions = [];
     
-        for (let i = 0; i < numQuestions; i++) {
-          let exercise;
-          let questionText;
-          let options = [];
-          let correctAnswer;
+      for (let i = 0; i < numQuestions; i++) {
+        let exercise;
+        let questionText;
+        let options = [];
+        let correctAnswer;
     
-          // Determine the level based on difficulty
-          let level;
-          if (difficulty === 'easy') {
-            level = 2; // Levels 1-2
-          } else if (difficulty === 'normal') {
-            level = 3; // Level 3
-          } else if (difficulty === 'hard') {
-            level = 5; // Level 5 and IR
-          }
-    
-          // Randomly decide whether to generate an expansion or factorization exercise
-          const exerciseType = Math.random() < 0.5 ? 'expand' : 'factor';
-    
-          if (difficulty === 'hard' && Math.random() < 0.5) {
-            // For hard difficulty, include IR exercises
-            exercise = exerciseType === 'expand' ? irExpansion() : irFactorization();
-            questionText = exerciseType === 'expand' ? 'Développer et simplifier :' : 'Factoriser :';
-          } else {
-            // Generate regular exercises
-            if (exerciseType === 'expand') {
-              exercise = createExpansionExercise(level);
-              questionText = 'Développer et simplifier :';
-            } else {
-              exercise = createFactorizationExercise(level);
-              questionText = 'Factoriser :';
-            }
-          }
-    
-          correctAnswer = exercise.answer;
-    
-          // Generate options (1 correct answer + 3 distractors)
-          options = generateOptions(correctAnswer, exerciseType, level);
-    
-          // Shuffle the options
-          options = shuffleArray(options);
-    
-          generatedQuestions.push({
-            question: {
-              instruction: questionText,
-              expression: exercise.question
-            },
-            options: options,
-            correctAnswer: correctAnswer,
-          });
-          
+        // Determine the level based on difficulty
+        let level;
+        if (difficulty === 'easy') {
+          level = 2; // Levels 1-2
+        } else if (difficulty === 'normal') {
+          level = 3; // Level 3
+        } else if (difficulty === 'hard') {
+          level = 5; // Level 5 and IR
         }
     
-        return generatedQuestions;
-      };
-  
-    const generateOptions = (correctAnswer, exerciseType, level) => {
-      const options = [correctAnswer];
-  
-      // Generate 3 incorrect answers
-      while (options.length < 4) {
-        let incorrectExercise;
-  
-        if (exerciseType === 'expand') {
-          incorrectExercise = createExpansionExercise(level);
+        // Randomly decide whether to generate an expansion or factorization exercise
+        const exerciseType = Math.random() < 0.5 ? 'expand' : 'factor';
+    
+        if (difficulty === 'hard' && Math.random() < 0.5) {
+          // For hard difficulty, include IR exercises
+          exercise = exerciseType === 'expand' ? irExpansion() : irFactorization();
+          questionText = exerciseType === 'expand' ? 'Développer et simplifier :' : 'Factoriser :';
         } else {
-          incorrectExercise = createFactorizationExercise(level);
+          // Generate regular exercises
+          if (exerciseType === 'expand') {
+            exercise = createExpansionExercise(level);
+            questionText = 'Développer et simplifier :';
+          } else {
+            exercise = createFactorizationExercise(level);
+            questionText = 'Factoriser :';
+          }
         }
-  
-        const incorrectAnswer = incorrectExercise.answer;
-  
-        // Ensure the incorrect answer is not the same as the correct one and not already in options
-        if (incorrectAnswer !== correctAnswer && !options.includes(incorrectAnswer)) {
-          options.push(incorrectAnswer);
-        }
+        
+    
+        correctAnswer = exercise.answer;
+    
+        // Generate options with tricky distractors
+        options = generateOptions(correctAnswer, exerciseType, level, exercise);
+    
+        // Shuffle the options
+        options = shuffleArray(options);
+    
+        generatedQuestions.push({
+          question: {
+            instruction: questionText,
+            expression: exercise.question
+          },
+          options: options,
+          correctAnswer: correctAnswer,
+        });
       }
-  
-      return options;
+    
+      return generatedQuestions;
     };
+    
+    function randInt(min, max) {
+      if (min > max) {
+        // Swap min and max values
+        [min, max] = [max, min];
+      }
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    
+      const generateOptions = (correctAnswer, exerciseType, level, correctExercise) => {
+        const options = [correctAnswer];
+      
+        // Generate 3 incorrect answers
+        while (options.length < 4) {
+          let incorrectAnswer;
+      
+          if (exerciseType === 'expand') {
+            // Create distractors for expansion exercises
+            incorrectAnswer = createExpansionDistractor(correctExercise);
+          } else {
+            // Create distractors for factorization exercises
+            incorrectAnswer = createFactorizationDistractor(correctExercise);
+          }
+      
+          // Ensure the incorrect answer is not the same as the correct one and not already in options
+          if (incorrectAnswer !== correctAnswer && !options.includes(incorrectAnswer)) {
+            options.push(incorrectAnswer);
+          }
+        }
+      
+        return options;
+      };
+      const createExpansionDistractor = (correctExercise) => {
+        let { answer } = correctExercise;
+    
+        // Properly parse the answer into terms
+        let terms = answer.match(/([+-]?[^+-]+)/g).map(term => term.trim());
+        let indexToAlter = randInt(0, terms.length - 1);
+    
+        let term = terms[indexToAlter];
+    
+        // Only alter numerical coefficients
+        let newTerm = term.replace(/([+-]?)(\d*)([a-zA-Z][\^]?\d*)?/, (match, sign, coeff, variablePart) => {
+            coeff = coeff === '' ? '1' : coeff;
+            let newCoeff = parseInt(coeff) + randInt(-2, 2);
+            if (newCoeff === 0) newCoeff = 1; // Avoid zero coefficient
+            return `${sign}${newCoeff}${variablePart || ''}`;
+        });
+    
+        terms[indexToAlter] = newTerm;
+    
+        return terms.join(' ').replace(/\s+/g, ' ').trim();
+    };
+    
+      
+      
+      const createFactorizationDistractor = (correctExercise) => {
+        let { answer } = correctExercise;
+        
+        let alteredAnswer = answer;
+        
+        if (Math.random() < 0.5) {
+          alteredAnswer = alteredAnswer.replace(/\d+/g, (match) => {
+            let num = parseInt(match) || 1;
+            num += randInt(-2, 2);
+            if (num === 0) num = 1;
+            return num.toString();
+          });
+        } else {
+          alteredAnswer = alteredAnswer.replace(/\+|-/g, (match) => (match === '+' ? '-' : '+'));
+        }
+        
+        return alteredAnswer;
+      };
+      
+            
   
     const shuffleArray = (array) => {
       // Simple Fisher-Yates shuffle
@@ -165,18 +218,19 @@ import {
           return "Excellent travail ! Votre maîtrise des mathématiques est impressionnante. Continuez à exceller !";
         }
       };
+      
     
       return (
         <MathJaxContext>
         <Card sx={{ mt: 4, mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
           <CardContent>
-            {showScore ? (
-              <Box>
-                <Typography variant="h5">Votre score : {score} sur {questions.length}</Typography>
-                <Typography variant="body1" sx={{ mt: 2 }}>{getRatingMessage(score)}</Typography>
-                <Button onClick={onFinish} variant="contained" sx={{ mt: 2 }}>Terminer le quiz</Button>
-              </Box>
-        ) : (
+          {showScore ? (
+            <Box>
+              <Typography variant="h5">Votre score : {score} sur {questions.length}</Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>{getRatingMessage(score)}</Typography>
+              <Button onClick={onFinish} variant="contained" sx={{ mt: 2 }}>Terminer le quiz</Button>
+            </Box>
+          ) : (
             <>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h6">Question {currentQuestion + 1}/{questions.length}</Typography>
@@ -186,6 +240,8 @@ import {
                 {questions[currentQuestion]?.question.instruction}
                 <MathJax inline>{`\\(${questions[currentQuestion]?.question.expression}\\)`}</MathJax>
               </Typography>
+
+
               <Grid container spacing={2} mt={2}>
                 {questions[currentQuestion]?.options.map((option, index) => (
                   <Grid item xs={6} key={index}>

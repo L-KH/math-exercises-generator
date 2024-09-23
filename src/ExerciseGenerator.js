@@ -19,6 +19,18 @@ const levelColors = {
     5: '#001e3b',
     'IR': 'linear-gradient(45deg, #0015ff 0%, #ff0073 99%, #a6ff00 100%)'
   };
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randNonZeroInt(min, max) {
+    let num = 0;
+    while (num === 0) {
+        num = randInt(min, max);
+    }
+    return num;
+}
+
 
 
 
@@ -26,39 +38,25 @@ const levelColors = {
     let exercise;
     let questionText = '';
   
-    if (level === 1) {
-      exercise = level1();
-    } else if (level === '1-2') {
-      exercise = level1_2();
-    } else if (level === '2-2') {
-      exercise = level2_2();
+    if (level === 1 || level === '1-2' || level === '2-2') {
+      exercise = level === 1 ? level1() : level === '1-2' ? level1_2() : level2_2();
+      questionText = 'Simplifier:';
     } else if (level === 'IR') {
       exercise = irExercises(exerciseType);
+      questionText = exercise.questionText;
     } else {
-      if (exerciseType === 'expand') {
+      if (exerciseType === 'expand' || (exerciseType === 'both' && Math.random() < 0.5)) {
         exercise = createExpansionExercise(level);
-        questionText = 'Développer:';
-      } else if (exerciseType === 'factor') {
-        exercise = createFactorizationExercise(level);
-        questionText = 'factoriser:';
+        questionText = 'Développer et simplifier:';
       } else {
-        if (Math.random() < 0.5) {
-          exercise = createExpansionExercise(level);
-          questionText = 'Développer:';
-        } else {
-          exercise = createFactorizationExercise(level);
-          questionText = 'Factoriser:';
-        }
+        exercise = createFactorizationExercise(level);
+        questionText = 'Factoriser:';
       }
-    }
-  
-    // Set questionText for levels 1, 1-2, 2-2, and IR
-    if (level === 1 || level === '1-2' || level === '2-2' || level === 'IR') {
-      questionText = exercise.type === 'expand' ? 'Develop:' : 'Factorize:';
     }
   
     return { ...exercise, questionText };
   }
+  
   
           
           
@@ -94,7 +92,7 @@ const expansion = identity.expansion
 
 const question = formula;
 const answer = expansion;
-return { question, answer, questionText: 'Expand and simplify:' };
+return { question, answer, questionText: 'Développer puis simplifier:' };
 }
 
 function irFactorization() {
@@ -122,17 +120,8 @@ return { question, answer, questionText: 'Factor:' };
 }
 
 // Helper functions for random number generation
-function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
-function randNonZeroInt(min, max) {
-    let num = 0;
-    while (num === 0) {
-        num = randInt(min, max);
-    }
-    return num;
-}
+
 
 // Level 1: Basic Operations with Negative Numbers
 function level1() {
@@ -248,34 +237,50 @@ function level1_2() {
   
 // Expansion Levels
 function expansionLevel2() {
-    let a = randNonZeroInt(-5, 5);
-    let b = randInt(-10, 10);
+  let a = randNonZeroInt(-5, 5);
+  let b = randInt(-10, 10);
 
-    const variables = ['x', 'y'];
-    const variable = variables[randInt(0, variables.length - 1)];
+  const variables = ['x', 'y'];
+  const variable = variables[randInt(0, variables.length - 1)];
 
-    const question = ` ${a}(${variable} ${b >= 0 ? '+' : ''} ${b})`;
-    const term1 = `${a === 1 ? '' : a === -1 ? '-' : a}${variable}`;
-    const term2 = a * b;
-    const answer = `${term1} ${term2 >= 0 ? '+' : ''} ${term2}`;
-    return { question, answer };
+  const question = ` ${a}(${variable} ${b >= 0 ? '+' : ''} ${b})`;
+  const term1 = formatTerm(a, variable);
+  const term2Value = a * b;
+  const term2 = term2Value >= 0 ? `+ ${term2Value}` : `- ${Math.abs(term2Value)}`;
+  const answer = `${term1} ${term2}`;
+  return { question, answer };
 }
+
 
 function expansionLevel3() {
-    let b = randInt(-5, 5);
-    let d = randInt(-5, 5);
+  let b = randInt(-5, 5);
+  let d = randInt(-5, 5);
+  const variable = 'x';
 
-    const variable = 'x';
+  const question = `(${variable} ${b >= 0 ? '+' : ''} ${b})(${variable} ${d >= 0 ? '+' : ''} ${d})`;
 
-    const question = ` (${variable} ${b >= 0 ? '+' : ''} ${b})(${variable} ${d >= 0 ? '+' : ''} ${d})`;
-    const first = `${variable}^2`;
-    const outer = `${b}${variable}`;
-    const inner = `${d}${variable}`;
-    const last = b * d;
-    const middleCoeff = b + d;
-    const answer = `${first} ${middleCoeff >= 0 ? '+' : ''} ${middleCoeff === 1 ? '' : middleCoeff === -1 ? '-' : middleCoeff}${variable} ${last >= 0 ? '+' : ''} ${last}`;
-    return { question, answer };
+  // Calculate coefficients
+  const firstCoeff = 1; // Coefficient of x^2 term
+  const middleCoeff = b + d;
+  const lastCoeff = b * d;
+
+  // Build answer string
+  let answer = `${variable}^2`;
+
+  if (middleCoeff !== 0) {
+      answer += ` ${middleCoeff > 0 ? '+' : '-'} ${Math.abs(middleCoeff)}${variable}`;
+  }
+
+  if (lastCoeff !== 0) {
+      answer += ` ${lastCoeff > 0 ? '+' : '-'} ${Math.abs(lastCoeff)}`;
+  }
+
+  return { question, answer };
 }
+
+
+
+
 
 function expansionLevel4() {
     let a = randNonZeroInt(-5, 5);
@@ -319,31 +324,79 @@ function expansionLevel5() {
 
 // Factorization Levels
 function factorizationLevel2() {
-    let a = randNonZeroInt(2, 5);
-    let b = randNonZeroInt(2, 5);
-    let c = randNonZeroInt(2, 5);
-    let variable = 'x';
+  let a = randNonZeroInt(2, 10);
+  let b = randNonZeroInt(2, 10);
+  let c = randNonZeroInt(2, 10);
+  let variable = 'x';
 
-    let term1 = a * b;
-    let term2 = a * c;
+  let gcd = greatestCommonDivisor(a * b, a * c);
 
-    const question = `${term1}${variable} + ${term2}`;
-    const answer = `${a}(${b}${variable} + ${c})`;
-    return { question, answer };
+  const term1 = a * b;
+  const term2 = a * c;
+
+  const question = `${term1}${variable} + ${term2}`;
+  const factorOut = gcd;
+  const insideParenthesis = `${(term1 / gcd)}${variable} + ${(term2 / gcd)}`;
+
+  const answer = `${factorOut}(${insideParenthesis})`;
+  return { question, answer };
 }
 
+
+function greatestCommonDivisor(a, b) {
+  if (!b) return a;
+  return greatestCommonDivisor(b, a % b);
+}
 
 
 function factorizationLevel3() {
-// Factor expressions similar to your example B
-let commonBinomial = `(${randNonZeroInt(1, 5)}x ${randInt(0, 1) ? '+' : '-'} ${randNonZeroInt(1, 5)})`;
-let a = randNonZeroInt(1, 5);
-let b = randNonZeroInt(1, 5);
+  let a = randNonZeroInt(1, 5);
+  let b = randNonZeroInt(1, 5);
+  let c = randNonZeroInt(1, 5);
+  let d = randNonZeroInt(1, 5);
+  let variable = 'x';
 
-const question = `${a}${commonBinomial} ${randInt(0, 1) ? '+' : '-'} ${b}${commonBinomial}`;
-const answer = `(${a} ${randInt(0, 1) ? '+' : '-'} ${b})${commonBinomial}`;
-return { question, answer };
+  // Correctly construct terms as strings
+  const term1 = `${a * c}${variable}^2`;
+  const term2 = `${a * d}${variable}`;
+  const term3 = `${b * c}${variable}`;
+  const term4 = `${b * d}`;
+
+  const expression = `${term1} + ${term2} + ${term3} + ${term4}`;
+
+  // You can implement factorization steps here if needed
+
+  const question = expression;
+  const answer = `(${a * c}${variable} + ${b * d})(${variable} + 1)`; // Example answer
+
+  return { question, answer };
 }
+
+function formatTerm(coefficient, variable = '', exponent = '') {
+  if (isNaN(coefficient)) {
+    console.error('Invalid coefficient:', coefficient);
+    coefficient = 1; // Default to 1 if coefficient is NaN
+  }
+
+  let coeffStr = '';
+
+  if (coefficient === 1 && variable) {
+    coeffStr = '';
+  } else if (coefficient === -1 && variable) {
+    coeffStr = '-';
+  } else {
+    coeffStr = coefficient.toString();
+  }
+
+  let varStr = variable;
+  if (exponent && exponent !== '1') {
+    varStr += `^${exponent}`;
+  }
+
+  return `${coeffStr}${varStr}`;
+}
+
+
 
 function factorizationLevel4() {
 // Factor by grouping
@@ -440,8 +493,9 @@ function ExerciseGenerator() {
                 label="Exercise Type"
               >
                 <MenuItem value="both">Les deux</MenuItem>
-                <MenuItem value="expand">Developpement</MenuItem>
+                <MenuItem value="expand">Développement</MenuItem>
                 <MenuItem value="factor">Factorisation</MenuItem>
+
               </Select>
             </Grid>
           </Grid>
