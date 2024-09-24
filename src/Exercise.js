@@ -1,17 +1,12 @@
 // Exercise.js
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import { MathJax } from 'better-react-mathjax';
 import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
 
 const Exercise = ({ exercise, index }) => {
   const [showAnswer, setShowAnswer] = useState(false);
-
-  useEffect(() => {
-    setShowAnswer(false);
-  }, [exercise]);
 
   return (
     <motion.div
@@ -23,7 +18,7 @@ const Exercise = ({ exercise, index }) => {
         <Typography variant="h6">Exercice {index + 1}</Typography>
         <Typography>
           <strong>{exercise.questionText} </strong>
-          <MathJax inline>{`\\(${exercise.question}\\)`}</MathJax>
+          <BlockMath math={exercise.question} />
         </Typography>
         <Button
           variant="contained"
@@ -43,7 +38,7 @@ const Exercise = ({ exercise, index }) => {
             }}
           >
             <Typography>
-              <strong>Réponse :</strong> <MathJax inline>{`\\(${exercise.answer}\\)`}</MathJax>
+              <strong>Réponse :</strong> <BlockMath math={exercise.answer} />
             </Typography>
           </div>
         )}
