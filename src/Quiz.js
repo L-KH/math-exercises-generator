@@ -222,11 +222,15 @@ import {
     
       return (
         <MathJaxContext>
-        <Card sx={{ mt: 4, mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
+        <Card  className="custom-card">
           <CardContent>
           {showScore ? (
             <Box>
-              <Typography variant="h5">Votre score : {score} sur {questions.length}</Typography>
+              <Typography variant="h5">Votre note : 
+                <span className="handwritten-score">
+                  {score}/{questions.length}
+                </span>
+              </Typography>
               <Typography variant="body1" sx={{ mt: 2 }}>{getRatingMessage(score)}</Typography>
               <Button onClick={onFinish} variant="contained" sx={{ mt: 2 }}>Terminer le quiz</Button>
             </Box>
@@ -234,7 +238,9 @@ import {
             <>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h6">Question {currentQuestion + 1}/{questions.length}</Typography>
-                <Typography variant="h6">Score : {score}/20</Typography>
+                <Typography variant="h6">Note : <span className="handwritten-score">
+                  {score}/{questions.length}
+                </span></Typography>
               </Box>
               <Typography variant="h5" gutterBottom>
                 {questions[currentQuestion]?.question.instruction}

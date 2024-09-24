@@ -39,16 +39,18 @@
 body {
   font-family: 'Roboto', Arial, sans-serif;
   font-size: 16px;
-  color: #2c3e50;
+  color: #33502c;
   margin: 0;
   padding: 20px;
   background-color: #f0f4f8;
   line-height: 1.6;
 }
+
+
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.2);
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -122,6 +124,24 @@ font-size: 28px;
   cursor: pointer;
 
 }
+.handwritten-score {
+  font-family: 'Caveat', cursive;
+  color: #ff0000;
+  font-size: 2rem;
+  transform: rotate(-5deg);
+  display: inline-block;
+  padding: 10px;
+  background-color: #ffffa5;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.custom-card {
+  margin-bottom: 32px;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
 .show-answer-btn:hover {
   background-color: #27ae60;
   transform: scale(1.05);

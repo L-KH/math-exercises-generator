@@ -452,7 +452,7 @@ function ExerciseGenerator() {
   };
   return (
     <div className="container">
-      <Card sx={{ mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
+      <Card className="custom-card">
         <CardContent>
           <h1>Math Exercises Generator</h1>
           <Grid container spacing={2} alignItems="center">

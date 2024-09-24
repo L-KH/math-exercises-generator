@@ -3,7 +3,7 @@ import { Button, Card, CardContent, Typography, Box } from '@mui/material';
 
 const QuizCard = ({ onStartQuiz }) => {
   return (
-    <Card sx={{ mt: 4, mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
+    <Card className="custom-card">
       <CardContent>
         <Typography variant="h5" component="div" gutterBottom>
         Es-tu assez fort pour passer le test ?

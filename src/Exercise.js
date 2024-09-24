@@ -1,7 +1,10 @@
+// Exercise.js
+
 import React, { useState, useEffect } from 'react';
 import { Button, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import { MathJax } from 'better-react-mathjax';
+import 'katex/dist/katex.min.css';
 
 const Exercise = ({ exercise, index }) => {
   const [showAnswer, setShowAnswer] = useState(false);
@@ -17,7 +20,7 @@ const Exercise = ({ exercise, index }) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Paper elevation={3} className="exercise" style={{ padding: '20px', marginBottom: '20px' }}>
-        <Typography variant="h6">Exercise {index + 1}</Typography>
+        <Typography variant="h6">Exercice {index + 1}</Typography>
         <Typography>
           <strong>{exercise.questionText} </strong>
           <MathJax inline>{`\\(${exercise.question}\\)`}</MathJax>
@@ -28,7 +31,7 @@ const Exercise = ({ exercise, index }) => {
           onClick={() => setShowAnswer(!showAnswer)}
           style={{ marginTop: '10px' }}
         >
-          {showAnswer ? 'Hide Answer' : 'Show Answer'}
+          {showAnswer ? 'Cacher la Réponse' : 'Afficher la Réponse'}
         </Button>
         {showAnswer && (
           <div
@@ -40,7 +43,7 @@ const Exercise = ({ exercise, index }) => {
             }}
           >
             <Typography>
-              <strong>Answer:</strong> <MathJax inline>{`\\(${exercise.answer}\\)`}</MathJax>
+              <strong>Réponse :</strong> <MathJax inline>{`\\(${exercise.answer}\\)`}</MathJax>
             </Typography>
           </div>
         )}
