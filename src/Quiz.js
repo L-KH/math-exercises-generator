@@ -244,7 +244,7 @@ import {
               </Box>
               <Typography variant="h5" gutterBottom>
                 {questions[currentQuestion]?.question.instruction}
-                <MathJax inline>{`\\(${questions[currentQuestion]?.question.expression}\\)`}</MathJax>
+                <MathJax inline tex={questions[currentQuestion]?.question.expression} />
               </Typography>
 
 

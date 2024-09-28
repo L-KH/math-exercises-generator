@@ -1,12 +1,15 @@
-// Exercise.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import 'katex/dist/katex.min.css';
-import { InlineMath, BlockMath } from 'react-katex';
+import { BlockMath } from 'react-katex';
 
 const Exercise = ({ exercise, index }) => {
   const [showAnswer, setShowAnswer] = useState(false);
+
+  useEffect(() => {
+    setShowAnswer(false);
+  }, [exercise]);
 
   return (
     <motion.div
@@ -32,7 +35,7 @@ const Exercise = ({ exercise, index }) => {
           <div
             style={{ 
               marginTop: '10px', 
-              backgroundColor: '#e8f5e9',
+              backgroundColor: '#5ebd5c',
               padding: '10px',
               borderRadius: '4px'
             }}

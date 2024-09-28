@@ -7,6 +7,7 @@ import { MathJaxContext } from 'better-react-mathjax';
 import MainPage from './MainPage';
 import ExerciseGenerator from './ExerciseGenerator';
 import ExerciseGeneratorPuissance from './ExercicesGenerator_puissance&racine';
+import ExercicesGenerator_racines from './ExercicesGenerator_racines';
 import Navbar from './Navbar';
 import './App.css';
 
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/developpement-factorisation" element={<ExerciseGenerator />} />
                 <Route path="/puissances-racines" element={<ExerciseGeneratorPuissance />} />
+                <Route path="/racines" element={<ExercicesGenerator_racines />} />
               </Routes>
             </div>
           </div>

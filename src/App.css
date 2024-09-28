@@ -50,14 +50,23 @@ body {
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.12);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.container_racine {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: rgba(173, 136, 39, 0.15);
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 h1, h2 {
   text-align: center;
-  color: #2c3e50;
+  color: #4eb6b9;
 }
 h6 {
   text-align: center;

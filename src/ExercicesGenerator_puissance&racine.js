@@ -1,7 +1,7 @@
 // ExercicesGenerator_puissance&racine.js
 
 import React, { useState, useCallback } from 'react';
-import Exercise from './Exercise'; // Ensure this component uses MathJax
+import Exercise from './Exercise'; // Make sure this component renders MathJax expressions
 import { Button, TextField, Select, MenuItem, Grid, Card, CardContent } from '@mui/material';
 
 // Helper functions
@@ -21,13 +21,11 @@ function randChoice(array) {
     return array[randInt(0, array.length - 1)];
 }
 
-// Function to generate random variables
 function randVariable() {
     const variables = ['a', 'b', 'x', 'y', 'm', 'n'];
     return randChoice(variables);
 }
 
-// Function to compute GCD
 function gcd(a, b) {
     if (!b) return Math.abs(a);
     return gcd(b, a % b);
@@ -70,61 +68,52 @@ function createPuissanceExercise(level) {
             return puissanceLevel4();
         case 5:
             return puissanceLevel5();
+        case 6:
+            return puissanceLevel6();
+        case 7:
+            return puissanceLevel7();
+        case 8:
+            return puissanceLevel8();
         default:
             return puissanceLevel1();
     }
 }
 
+// Level 1: Basic multiplication of powers with the same base
 function puissanceLevel1() {
-    // Simple exponentiation with integer base and exponent
-    let base = randInt(-10, 10);
-    let exponent = randInt(1, 5);
+    const base = randInt(2, 5);
+    const exponent1 = randInt(1, 5);
+    const exponent2 = randInt(1, 5);
 
-    if (base === 0 && exponent === 0) {
-        base = 1; // Avoid 0^0
-    }
+    const question = ` ${base}^{${exponent1}} \\times ${base}^{${exponent2}} `;
+    const answerExponent = exponent1 + exponent2;
 
-    const question = ` ${base}^{${exponent}} `;
-    const answer = Math.pow(base, exponent);
-
-    return { question, answer: `${answer}` };
-}
-
-function puissanceLevel2() {
-    // Exponentiation involving fractions, result as fraction
-    const numerator = randInt(-5, 5);
-    const denominator = randInt(1, 5); // Avoid zero denominator
-
-    // Ensure denominator is not zero
-    if (denominator === 0) {
-        denominator = 1;
-    }
-
-    const exponent = randInt(1, 3);
-
-    const question = ` \\left( \\dfrac{${numerator}}{${denominator}} \\right)^{${exponent}} `;
-    const numPower = Math.pow(numerator, exponent);
-    const denPower = Math.pow(denominator, exponent);
-
-    // Simplify fraction
-    const gcdValue = gcd(numPower, denPower);
-    const simplifiedNum = numPower / gcdValue;
-    const simplifiedDen = denPower / gcdValue;
-
-    const answer = simplifiedDen === 1
-        ? `${simplifiedNum}`
-        : ` \\dfrac{${simplifiedNum}}{${simplifiedDen}} `;
+    const answer = ` ${base}^{${answerExponent}} `;
 
     return { question, answer };
 }
 
+// Level 2: Basic division of powers with the same base
+function puissanceLevel2() {
+    const base = randInt(2, 5);
+    const exponent1 = randInt(2, 5);
+    const exponent2 = randInt(1, exponent1); // Ensure exponent2 <= exponent1
+
+    const question = ` \\dfrac{ ${base}^{${exponent1}} }{ ${base}^{${exponent2}} } `;
+    const answerExponent = exponent1 - exponent2;
+
+    const answer = ` ${base}^{${answerExponent}} `;
+
+    return { question, answer };
+}
+
+// Level 3: Multiplication and division with negative exponents
 function puissanceLevel3() {
-    // Simplify expressions with same base
-    const base = randNonZeroInt(2, 5);
+    const base = randInt(2, 5);
     const exponent1 = randInt(-5, 5);
     const exponent2 = randInt(-5, 5);
 
-    const operation = Math.random() < 0.5 ? '\\times' : '\\div';
+    const operation = randChoice(['\\times', '\\div']);
 
     const question = ` ${base}^{${exponent1}} ${operation} ${base}^{${exponent2}} `;
 
@@ -140,42 +129,130 @@ function puissanceLevel3() {
     return { question, answer };
 }
 
+// Level 4: Power of a power
 function puissanceLevel4() {
-    // Simplify expressions with variables and exponents
-    let var1 = randVariable();
+    const base = randInt(2, 5);
+    const exponent1 = randInt(1, 5);
+    const exponent2 = randInt(1, 5);
+
+    const question = ` \\left( ${base}^{${exponent1}} \\right)^{${exponent2}} `;
+    const answerExponent = exponent1 * exponent2;
+
+    const answer = ` ${base}^{${answerExponent}} `;
+
+    return { question, answer };
+}
+
+// Level 5: Expressions with multiple variables and positive exponents
+function puissanceLevel5() {
+    const var1 = randVariable();
     let var2 = randVariable();
 
-    // Ensure variables are different
     while (var2 === var1) {
         var2 = randVariable();
     }
 
-    const exponents = [];
-    for (let i = 0; i < 4; i++) {
-        exponents.push(randInt(1, 5));
+    const exponentA1 = randInt(1, 5);
+    const exponentB1 = randInt(1, 5);
+    const exponentA2 = randInt(1, 5);
+    const exponentB2 = randInt(1, 5);
+
+    const question = ` ${var1}^{${exponentA1}} ${var2}^{${exponentB1}} \\times ${var1}^{${exponentA2}} ${var2}^{${exponentB2}} `;
+    const totalExponentVar1 = exponentA1 + exponentA2;
+    const totalExponentVar2 = exponentB1 + exponentB2;
+
+    const answer = ` ${var1}^{${totalExponentVar1}} ${var2}^{${totalExponentVar2}} `;
+
+    return { question, answer };
+}
+
+// Level 6: Simplify expressions with negative exponents and parentheses
+function puissanceLevel6() {
+    const base = randInt(2, 5);
+    const exponent1 = randInt(-5, 5);
+    const exponent2 = randInt(-5, 5);
+    const exponent3 = randInt(1, 3);
+
+    const question = ` \\left( ${base}^{${exponent1}} \\times ${base}^{${exponent2}} \\right)^{${exponent3}} `;
+    const combinedExponent = (exponent1 + exponent2) * exponent3;
+
+    const answer = ` ${base}^{${combinedExponent}} `;
+
+    return { question, answer };
+}
+
+// Level 7: Expressions involving fractions and powers
+function puissanceLevel7() {
+    const var1 = randVariable();
+    let var2 = randVariable();
+    let var3 = randVariable();
+
+    // Ensure variables are unique
+    while (var2 === var1) {
+        var2 = randVariable();
+    }
+    while (var3 === var1 || var3 === var2) {
+        var3 = randVariable();
     }
 
-    const question = ` \\dfrac{ ${var1}^{${exponents[0]}} \\times ${var2}^{${exponents[1]}} }{ ${var1}^{${exponents[2]}} \\times ${var2}^{${exponents[3]}} } `;
+    const exponentA1 = randInt(-5, 5);
+    const exponentB1 = randInt(-5, 5);
+    const exponentC1 = randInt(-5, 5);
 
-    // Simplify exponents
-    const exponentVar1 = exponents[0] - exponents[2];
-    const exponentVar2 = exponents[1] - exponents[3];
+    const exponentA2 = randInt(-5, 5);
+    const exponentB2 = randInt(-5, 5);
+    const exponentC2 = randInt(-5, 5);
 
-    // Construct answer
+    const commonExponent = randInt(1, 3);
+
+    const question = ` \\left( ${var1}^{${exponentA1}} ${var2}^{${exponentB1}} ${var3}^{${exponentC1}} \\times ${var1}^{${exponentA2}} ${var2}^{${exponentB2}} ${var3}^{${exponentC2}} \\right)^{${commonExponent}} `;
+
+    const totalExponentVar1 = (exponentA1 + exponentA2) * commonExponent;
+    const totalExponentVar2 = (exponentB1 + exponentB2) * commonExponent;
+    const totalExponentVar3 = (exponentC1 + exponentC2) * commonExponent;
+
     let answerParts = [];
-    if (exponentVar1 !== 0) {
-        if (exponentVar1 === 1) {
-            answerParts.push(` ${var1} `);
-        } else {
-            answerParts.push(` ${var1}^{${exponentVar1}} `);
-        }
+    if (totalExponentVar1 !== 0) {
+        answerParts.push(` ${var1}^{${totalExponentVar1}} `);
     }
-    if (exponentVar2 !== 0) {
-        if (exponentVar2 === 1) {
-            answerParts.push(` ${var2} `);
-        } else {
-            answerParts.push(` ${var2}^{${exponentVar2}} `);
-        }
+    if (totalExponentVar2 !== 0) {
+        answerParts.push(` ${var2}^{${totalExponentVar2}} `);
+    }
+    if (totalExponentVar3 !== 0) {
+        answerParts.push(` ${var3}^{${totalExponentVar3}} `);
+    }
+    const answer = answerParts.length > 0 ? answerParts.join(' \\times ') : '1';
+
+    return { question, answer };
+}
+
+// Level 8: Complex expressions combining multiple exponent rules
+function puissanceLevel8() {
+    const var1 = randVariable();
+    let var2 = randVariable();
+
+    while (var2 === var1) {
+        var2 = randVariable();
+    }
+
+    const exponents = Array.from({ length: 6 }, () => randInt(-3, 3));
+
+    const numerator = `${var1}^{${exponents[0]}} \\; ${var2}^{${exponents[1]}} \\left( ${var1}^{${exponents[2]}} \\; ${var2}^{${exponents[3]}} \\right)^{${exponents[4]}}`;
+    const denominator = `${var1}^{${exponents[5]}} \\; ${var2}^{${-exponents[4]}}`;
+
+    const question = ` \\dfrac{ ${numerator} }{ ${denominator} } `;
+
+    // Calculating exponents step by step
+    const totalExponentVar1 = exponents[0] + exponents[2] * exponents[4] - exponents[5];
+    const totalExponentVar2 = exponents[1] + exponents[3] * exponents[4] + exponents[4];
+
+    // Constructing the answer
+    let answerParts = [];
+    if (totalExponentVar1 !== 0) {
+        answerParts.push(` ${var1}^{${totalExponentVar1}} `);
+    }
+    if (totalExponentVar2 !== 0) {
+        answerParts.push(` ${var2}^{${totalExponentVar2}} `);
     }
 
     const answer = answerParts.length > 0 ? answerParts.join(' \\times ') : '1';
@@ -183,62 +260,9 @@ function puissanceLevel4() {
     return { question, answer };
 }
 
-function puissanceLevel5() {
-    // Complex expressions with variables, negative exponents, and fractions
-    let var1 = randVariable();
-    let var2 = randVariable();
-
-    while (var2 === var1) {
-        var2 = randVariable();
-    }
-
-    const exponent1 = randInt(-3, 3);
-    const exponent2 = randInt(-3, 3);
-    const exponent3 = randInt(-3, 3);
-    const exponent4 = randInt(-3, 3);
-
-    const question = ` \\frac{ ${var1}^{${exponent1}} ${var2}^{${exponent2}} }{ ${var1}^{${exponent3}} ${var2}^{${exponent4}} } `;
-
-    // Simplify exponents
-    const exponentVar1 = exponent1 - exponent3;
-    const exponentVar2 = exponent2 - exponent4;
-
-    // Handle negative exponents and fractions
-    let numeratorParts = [];
-    let denominatorParts = [];
-
-    if (exponentVar1 > 0) {
-        numeratorParts.push(` ${var1}^{${exponentVar1}} `);
-    } else if (exponentVar1 < 0) {
-        denominatorParts.push(` ${var1}^{${-exponentVar1}} `);
-    }
-
-    if (exponentVar2 > 0) {
-        numeratorParts.push(` ${var2}^{${exponentVar2}} `);
-    } else if (exponentVar2 < 0) {
-        denominatorParts.push(` ${var2}^{${-exponentVar2}} `);
-    }
-
-    let answer = '';
-    if (denominatorParts.length === 0) {
-        answer = numeratorParts.join(' \\times ');
-    } else {
-        const numerator = numeratorParts.length > 0 ? numeratorParts.join(' \\times ') : '1';
-        const denominator = denominatorParts.join(' \\times ');
-        answer = ` \\frac{ ${numerator} }{ ${denominator} } `;
-    }
-
-    if (answer === '') {
-        answer = '1';
-    }
-
-    return { question, answer };
-}
-
-
 // Functions to create exercises for 'les racines'
 function createRacineExercise(level) {
-    switch(level) {
+    switch (level) {
         case 1:
             return racineLevel1();
         case 2:
@@ -249,13 +273,19 @@ function createRacineExercise(level) {
             return racineLevel4();
         case 5:
             return racineLevel5();
+        case 6:
+            return racineLevel6();
+        case 7:
+            return racineLevel7();
+        case 8:
+            return racineLevel8();
         default:
             return racineLevel1();
     }
 }
 
+// Level 1: Square roots of perfect squares
 function racineLevel1() {
-    // Simple square roots of perfect squares
     const perfectSquares = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100];
     const radicand = randChoice(perfectSquares);
 
@@ -265,21 +295,20 @@ function racineLevel1() {
     return { question, answer };
 }
 
+// Level 2: Simplify square roots (e.g., sqrt(18) = 3sqrt(2))
 function racineLevel2() {
-    // Simplify square roots (e.g., \sqrt{18} = 3\sqrt{2})
-    let n = randInt(2, 10);
-    let k = randInt(2, 5);
-    const radicand = n * n * k; // n^2 * k
+    const n = randInt(2, 10);
+    const k = randInt(2, 5);
+    const radicand = n * n * k;
 
-    // Simplify \sqrt{radicand}
     const question = ` \\sqrt{${radicand}} `;
     const answer = `${n} \\sqrt{${k}}`;
 
     return { question, answer };
 }
 
+// Level 3: Multiply and divide square roots
 function racineLevel3() {
-    // Multiply and divide square roots
     const a = randInt(2, 10);
     const b = randInt(2, 10);
 
@@ -305,8 +334,8 @@ function racineLevel3() {
     }
 }
 
+// Level 4: Rationalization of denominators
 function racineLevel4() {
-    // Rationalization of denominators
     const numerator = randInt(1, 10);
     const radicand = randInt(2, 20);
 
@@ -316,23 +345,65 @@ function racineLevel4() {
     const newNumerator = `${numerator} \\sqrt{${radicand}}`;
     const newDenominator = radicand;
 
-    const answer = ` \\dfrac{${newNumerator}}{${newDenominator}} `;
+    const gcdValue = gcd(numerator, radicand);
+    const simplifiedNumerator = numerator / gcdValue;
+    const simplifiedDenominator = radicand / gcdValue;
+
+    const answer = ` \\dfrac{${simplifiedNumerator} \\sqrt{${radicand}}}{${simplifiedDenominator}} `;
 
     return { question, answer };
 }
 
+// Level 5: Simplify expressions with roots and exponents
 function racineLevel5() {
-    // Solve equations involving square roots
+    const n = randInt(2, 5);
+    const m = randInt(2, 5);
+
+    const question = ` \\left( \\sqrt{${n}} \\right)^{${m}} `;
+    const exponent = m / 2;
+
+    const answer = ` ${n}^{${exponent}} `;
+
+    return { question, answer };
+}
+
+// Level 6: Equations involving square roots
+function racineLevel6() {
     const x = randInt(1, 10);
     const radicand = x * x;
 
     const question = ` \\sqrt{x} = ${x} `;
-
     const answer = ` x = ${radicand} `;
 
     return { question, answer };
 }
 
+// Level 7: Simplify nested square roots
+function racineLevel7() {
+    const a = randInt(2, 5);
+    const b = randInt(2, 5);
+
+    const question = ` \\sqrt{ ${a} + \\sqrt{${b}} } `;
+    const answer = ` Cannot simplify further `;
+
+    return { question, answer };
+}
+
+// Level 8: Complex expressions combining roots and exponents
+function racineLevel8() {
+    const base = randInt(2, 5);
+    const exponent = randInt(1, 3);
+    const radicand = randInt(2, 5);
+
+    const question = ` \\left( \\sqrt{${radicand}} \\right)^{${exponent}} \\times ${base}^{\\dfrac{${exponent}}{2}} `;
+    const exponentResult = exponent / 2;
+
+    const answer = ` ${base}^{${exponentResult}} \\times ${radicand}^{${exponentResult}} `;
+
+    return { question, answer };
+}
+
+// Helper function to simplify square roots
 function simplifySquareRoot(n) {
     let largestSquare = 1;
 
@@ -352,11 +423,14 @@ function simplifySquareRoot(n) {
     }
 }
 
+// Main component
 function ExerciseGeneratorPuissance() {
     const [exercises, setExercises] = useState([]);
     const [numExercises, setNumExercises] = useState(10);
-    const [exerciseTopic, setExerciseTopic] = useState('both'); // Default to 'both'
+    const [exerciseTopic, setExerciseTopic] = useState('puissances'); // Default to 'puissances'
     const [level, setLevel] = useState(1);
+
+    const [exerciseKey, setExerciseKey] = useState(0);
 
     const generateExercises = useCallback((selectedLevel = level) => {
         const newExercises = [];
@@ -364,15 +438,19 @@ function ExerciseGeneratorPuissance() {
             newExercises.push(createExercise(selectedLevel, exerciseTopic));
         }
         setExercises(newExercises);
+        setExerciseKey(prevKey => prevKey + 1); // Increment the key
     }, [numExercises, exerciseTopic, level]);
 
     // Level colors for buttons
     const levelColors = {
         1: '#d8ebff',
-        2: '#89c4ff',
-        3: '#0080ff',
-        4: '#004589',
-        5: '#001e3b',
+        2: '#b0d4ff',
+        3: '#89c4ff',
+        4: '#62b5ff',
+        5: '#3aa5ff',
+        6: '#0080ff',
+        7: '#0059b3',
+        8: '#002966',
     };
 
     return (
@@ -397,14 +475,17 @@ function ExerciseGeneratorPuissance() {
                                 onChange={(e) => setExerciseTopic(e.target.value)}
                                 label="Type d'Exercices"
                             >
+                                <MenuItem value="puissances">Puissances</MenuItem>
+                                <MenuItem value="racines">Racines carrées</MenuItem>
                                 <MenuItem value="both">Les deux</MenuItem>
-                                <MenuItem value="puissances">Les puissances</MenuItem>
-                                <MenuItem value="racines">Les racines carrées</MenuItem>
                             </Select>
                         </Grid>
                         <Grid item xs={12}>
-                            <div className="level-buttons" style={{ textAlign: 'center', marginTop: '20px' }}>
-                                {[1, 2, 3, 4, 5].map((lvl) => (
+                            <div
+                                className="level-buttons"
+                                style={{ textAlign: 'center', marginTop: '20px' }}
+                            >
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map((lvl) => (
                                     <Button
                                         key={lvl}
                                         onClick={() => {
@@ -425,18 +506,22 @@ function ExerciseGeneratorPuissance() {
                         </Grid>
                     </Grid>
                     <div style={{ marginTop: '20px' }}>
-                        <Button variant="contained" onClick={() => generateExercises(level)}>Générer les Exercices</Button>
+                        <Button variant="contained" onClick={() => generateExercises(level)}>
+                            Générer les Exercices
+                        </Button>
                     </div>
                 </CardContent>
             </Card>
             <div id="exercise-container">
                 {exercises.map((exercise, index) => (
-                    <Exercise key={index} exercise={exercise} index={index} />
+                    <Exercise key={`${index}-${exerciseKey}`} exercise={exercise} index={index} />
                 ))}
             </div>
             {exercises.length > 0 && (
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <Button variant="outlined" onClick={() => window.print()}>Imprimer les Exercices</Button>
+                    <Button variant="outlined" onClick={() => window.print()}>
+                        Imprimer les Exercices
+                    </Button>
                 </div>
             )}
         </div>
