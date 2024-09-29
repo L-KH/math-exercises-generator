@@ -91,29 +91,29 @@ import {
     }
     
     
-      const generateOptions = (correctAnswer, exerciseType, level, correctExercise) => {
-        const options = [correctAnswer];
+    const generateOptions = (correctAnswer, exerciseType, level, correctExercise) => {
+      const options = [`\\(${correctAnswer}\\)`];
       
-        // Generate 3 incorrect answers
-        while (options.length < 4) {
-          let incorrectAnswer;
-      
-          if (exerciseType === 'expand') {
-            // Create distractors for expansion exercises
-            incorrectAnswer = createExpansionDistractor(correctExercise);
-          } else {
-            // Create distractors for factorization exercises
-            incorrectAnswer = createFactorizationDistractor(correctExercise);
-          }
-      
-          // Ensure the incorrect answer is not the same as the correct one and not already in options
-          if (incorrectAnswer !== correctAnswer && !options.includes(incorrectAnswer)) {
-            options.push(incorrectAnswer);
-          }
+      // Generate 3 incorrect answers
+      while (options.length < 4) {
+        let incorrectAnswer;
+    
+        if (exerciseType === 'expand') {
+          incorrectAnswer = createExpansionDistractor(correctExercise);
+        } else {
+          incorrectAnswer = createFactorizationDistractor(correctExercise);
         }
-      
-        return options;
-      };
+    
+        incorrectAnswer = `\\(${incorrectAnswer}\\)`;
+    
+        if (incorrectAnswer !== options[0] && !options.includes(incorrectAnswer)) {
+          options.push(incorrectAnswer);
+        }
+      }
+    
+      return options;
+    };
+    
       const createExpansionDistractor = (correctExercise) => {
         let { answer } = correctExercise;
     
@@ -186,26 +186,31 @@ import {
       }
     };
     const handleAnswerClick = (answer) => {
-        if (isAnswered) return;
-        
-        setSelectedAnswer(answer);
-        setIsAnswered(true);
+      if (isAnswered) return;
+      
+      setSelectedAnswer(answer);
+      setIsAnswered(true);
     
-        if (answer === questions[currentQuestion].correctAnswer) {
-          setScore(score + 1);
+      // Remove MathJax delimiters for comparison
+      const unwrappedAnswer = answer.replace(/^\\\((.*)\\\)$/, '$1');
+      const unwrappedCorrectAnswer = questions[currentQuestion].correctAnswer.replace(/^\\\((.*)\\\)$/, '$1');
+    
+      if (unwrappedAnswer === unwrappedCorrectAnswer) {
+        setScore(score + 1);
+      }
+    
+      setTimeout(() => {
+        const nextQuestion = currentQuestion + 1;
+        if (nextQuestion < questions.length) {
+          setCurrentQuestion(nextQuestion);
+          setSelectedAnswer(null);
+          setIsAnswered(false);
+        } else {
+          setShowScore(true);
         }
+      }, 1000);
+    };
     
-        setTimeout(() => {
-          const nextQuestion = currentQuestion + 1;
-          if (nextQuestion < questions.length) {
-            setCurrentQuestion(nextQuestion);
-            setSelectedAnswer(null);
-            setIsAnswered(false);
-          } else {
-            setShowScore(true);
-          }
-        }, 1000);
-      };
     
       const getRatingMessage = (score) => {
         if (score <= 5) {
@@ -244,8 +249,9 @@ import {
               </Box>
               <Typography variant="h5" gutterBottom>
                 {questions[currentQuestion]?.question.instruction}
-                <MathJax inline tex={questions[currentQuestion]?.question.expression} />
+                <MathJax>{`\\(${questions[currentQuestion]?.question.expression}\\)`}</MathJax>
               </Typography>
+
 
 
               <Grid container spacing={2} mt={2}>
@@ -258,14 +264,14 @@ import {
                       sx={{
                         height: '100px',
                         backgroundColor: isAnswered
-                          ? option === questions[currentQuestion].correctAnswer
+                          ? option === `\\(${questions[currentQuestion].correctAnswer}\\)`
                             ? '#0aff2f'
                             : selectedAnswer === option
                             ? '#ff1749'
                             : 'white'
                           : 'white',
                         color: isAnswered
-                          ? option === questions[currentQuestion].correctAnswer || selectedAnswer === option
+                          ? option === `\\(${questions[currentQuestion].correctAnswer}\\)` || selectedAnswer === option
                             ? 'white'
                             : 'black'
                           : 'black',
@@ -274,8 +280,9 @@ import {
                         },
                       }}
                     >
-                      <MathJax inline>{`\\(${option}\\)`}</MathJax>
+                      <MathJax>{option}</MathJax>
                     </Button>
+
                   </Grid>
                 ))}
               </Grid>
