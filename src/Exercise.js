@@ -20,14 +20,15 @@ const Exercise = ({ exercise, index }) => {
       <Paper elevation={3} className="exercise" style={{ padding: '20px', marginBottom: '20px' }}>
         <Typography variant="h6">Exercice {index + 1}</Typography>
         <Typography>
-          <strong>{exercise.questionText} </strong>
+        <strong style={{ fontSize: '16px' }}>{exercise.questionText}</strong>
+
           <BlockMath math={exercise.question} />
         </Typography>
         <Button
           variant="contained"
           color="primary"
           onClick={() => setShowAnswer(!showAnswer)}
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: '1px' }}
         >
           {showAnswer ? 'Cacher la Réponse' : 'Afficher la Réponse'}
         </Button>
@@ -35,8 +36,8 @@ const Exercise = ({ exercise, index }) => {
           <div
             style={{ 
               marginTop: '10px', 
-              backgroundColor: '#5ebd5c',
-              padding: '10px',
+              backgroundColor: '#06ff00',
+              padding: '1px',
               borderRadius: '4px'
             }}
           >

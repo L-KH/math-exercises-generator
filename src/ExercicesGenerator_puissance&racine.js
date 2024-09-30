@@ -2,7 +2,10 @@
 
 import React, { useState, useCallback } from 'react';
 import Exercise from './Exercise'; // Ensure this component renders MathJax expressions
-import { Button, TextField, Select, MenuItem, Grid, Card, CardContent } from '@mui/material';
+import { Button, TextField, Select, MenuItem, Grid, Card, CardContent, Collapse, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MiniDocument from './MiniDocument'; // Make sure to create this component in a separate file
+import { MathJaxContext, MathJax } from 'better-react-mathjax';
 
 // Helper functions
 function randInt(min, max) {
@@ -50,6 +53,8 @@ function createPuissanceExercise(level) {
             return puissanceLevel3();
         case 4:
             return puissanceLevel4();
+        case '4+':
+            return puissanceLevel4Plus();
         case 5:
             return puissanceLevel5();
         case 6:
@@ -144,6 +149,20 @@ function puissanceLevel4() {
     const answer = ` ${base}^{${answerExponent}} `;
 
     return { question, answer };
+}
+// Level 4+: Random mix of levels 1, 2, and 4
+function puissanceLevel4Plus() {
+    const levelChoice = randChoice([1, 2, 4]);
+    switch(levelChoice) {
+        case 1:
+            return puissanceLevel1();
+        case 2:
+            return puissanceLevel2();
+        case 4:
+            return puissanceLevel4();
+        default:
+            return puissanceLevel1();
+    }
 }
 
 
@@ -276,43 +295,57 @@ function puissanceLevel8() {
 // New Level 'ES': Exercises on Scientific Notation
 function createEcritureScientifiqueExercise() {
     const type = randChoice(['large', 'small']);
-    let number, mantissa, exponent, sign;
+    let exponent;
+    let mantissa;
+    let number;
+    let sign = randChoice(['', '-']);
 
+    // Generate mantissa between 1.0 and 9.9 with one decimal place
+    mantissa = (Math.random() * 8.9 + 1).toFixed(1); // Generates 1.0 to 9.9
+
+    // For small numbers, exponent negative, for large numbers, exponent positive
     if (type === 'large') {
-        exponent = randInt(3, 12);
-        mantissa = (Math.random() * 9 + 1).toFixed(2); // 2 decimal places for mantissa
-        number = parseFloat(mantissa) * Math.pow(10, exponent);
+        exponent = randInt(3, 9); // Exponent between 3 and 9
     } else {
-        exponent = randInt(3, 12);
-        mantissa = (Math.random() * 9 + 1).toFixed(2); // 2 decimal places for mantissa
-        number = parseFloat(mantissa) * Math.pow(10, -exponent);
+        exponent = -randInt(1, 9); // Exponent between -1 and -9
     }
 
-    sign = randChoice(['', '-']);
-    number = parseFloat(sign + number.toFixed(12)); // Limit to 12 decimal places to avoid floating point issues
+    // Now compute the number
+    number = parseFloat(sign + mantissa) * Math.pow(10, exponent);
 
-    // Format the question number
-    const questionNumber = number.toLocaleString('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 12
-    }).replace(/,/g, '');
+    // Format the question number appropriately
+    let questionNumber;
+
+    if (Math.abs(number) >= 1) {
+        questionNumber = number.toLocaleString('fr-FR', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }).replace(/\s/g, ' ').replace(/,/g, ',');
+    } else {
+        // For small numbers, format with enough decimal places
+        const absNumber = Math.abs(number);
+        const decimalPlaces = -Math.floor(Math.log10(absNumber)) + 1;
+        questionNumber = absNumber.toFixed(decimalPlaces);
+        if (sign === '-') questionNumber = '-' + questionNumber;
+    }
 
     const question = `${questionNumber}`;
 
-    // Format the answer
-    const formattedMantissa = parseFloat(mantissa).toFixed(2).replace(/\.?0+$/, '');
-    const answer = `${sign}${formattedMantissa} \\times 10^{${type === 'large' ? exponent : -exponent}}`;
+    const answer = `${sign}${mantissa.replace('.', ',')} \\times 10^{${exponent}}`;
 
     return { question, answer };
 }
+
+
 
 // Main component
 function ExerciseGeneratorPuissance() {
     const [exercises, setExercises] = useState([]);
     const [numExercises, setNumExercises] = useState(10);
     const [level, setLevel] = useState(1);
-
     const [exerciseKey, setExerciseKey] = useState(0);
+    const [isDocumentOpen, setIsDocumentOpen] = useState(false);
+
 
     const generateExercises = useCallback((selectedLevel = level) => {
         const newExercises = [];
@@ -329,19 +362,21 @@ function ExerciseGeneratorPuissance() {
         2: '#b0d4ff',
         3: '#89c4ff',
         4: '#62b5ff',
+        '4+': 'linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3)', // Rainbow gradient
         5: '#3aa5ff',
         6: '#0080ff',
         7: '#0059b3',
         8: '#002966',
         'ES': '#ff9900',
     };
+    
 
     return (
         <div className="container">
-            <Card sx={{ mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
+            <Card sx={{ mb: 2, p: 1, backgroundColor: '#f0f4f8' }}>
                 <CardContent>
                     <h1>Générateur d'Exercices - Puissances & Notation Scientifique</h1>
-                    <Grid container spacing={2} alignItems="center">
+                    <Grid container spacing={1} alignItems="center">
                         <Grid item xs={12} sm={6} md={4}>
                             <TextField
                                 fullWidth
@@ -354,9 +389,9 @@ function ExerciseGeneratorPuissance() {
                         <Grid item xs={12}>
                             <div
                                 className="level-buttons"
-                                style={{ textAlign: 'center', marginTop: '20px' }}
+                                style={{ textAlign: 'center', marginTop: '10px' }}
                             >
-                                {[1, 2, 3, 4, 5, 6, 7, 8, 'ES'].map((lvl) => (
+                                {[1, 2, 3, 4, '4+', 5, 6, 7, 8, 'ES'].map((lvl) => (
                                     <Button
                                         key={lvl}
                                         onClick={() => {
@@ -366,7 +401,7 @@ function ExerciseGeneratorPuissance() {
                                         variant="contained"
                                         style={{
                                             margin: '5px',
-                                            backgroundColor: levelColors[lvl],
+                                            background: levelColors[lvl],
                                             color: '#fff',
                                         }}
                                     >
@@ -399,6 +434,25 @@ function ExerciseGeneratorPuissance() {
                     </Button>
                 </div>
             )}
+            
+            <Card sx={{ mt: 4, mb: 4, p: 2, backgroundColor: '#f0f4f8' }}>
+          <CardContent>
+            <Button
+              onClick={() => setIsDocumentOpen(!isDocumentOpen)}
+              endIcon={<ExpandMoreIcon style={{ transform: isDocumentOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />}
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
+              <Typography variant="h6">
+                Guide d'Étude: Les Puissances et Les Exposants
+              </Typography>
+            </Button>
+            <Collapse in={isDocumentOpen}>
+              <MiniDocument />
+            </Collapse>
+          </CardContent>
+            </Card>
         </div>
     );
 }
