@@ -444,7 +444,7 @@ function ExerciseGeneratorPuissance() {
               variant="contained"
               color="primary"
             >
-              <Typography variant="h6">
+              <Typography className="h7">
                 Guide d'Étude: Les Puissances et Les Exposants
               </Typography>
             </Button>

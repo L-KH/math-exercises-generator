@@ -70,6 +70,11 @@ h1, h2 {
 }
 h6 {
   text-align: center;
+  color: #7700ff;
+  font-size: 22px;
+}
+.h7 {
+  text-align: center;
   color: #e5ff00;
   font-size: 22px;
 }
