@@ -66,8 +66,8 @@ function createPuissanceExercise(level) {
 // Level 1: Basic multiplication of powers with the same base
 function puissanceLevel1() {
     const base = randInt(2, 5);
-    const exponent1 = randInt(1, 5);
-    const exponent2 = randInt(1, 5);
+    const exponent1 = randInt(-5, 5);
+    const exponent2 = randInt(-5, 5);
 
     const question = ` ${base}^{${exponent1}} \\times ${base}^{${exponent2}} `;
     const answerExponent = exponent1 + exponent2;
@@ -77,11 +77,11 @@ function puissanceLevel1() {
     return { question, answer };
 }
 
-// Level 2: Basic division of powers with the same base
+// Level 2: Basic division of powers with the same base (including negative exponents)
 function puissanceLevel2() {
     const base = randInt(2, 5);
-    const exponent1 = randInt(2, 5);
-    const exponent2 = randInt(1, exponent1); // Ensure exponent2 <= exponent1
+    const exponent1 = randInt(-5, 5);
+    const exponent2 = randInt(-5, 5);
 
     const question = ` \\dfrac{ ${base}^{${exponent1}} }{ ${base}^{${exponent2}} } `;
     const answerExponent = exponent1 - exponent2;
@@ -91,21 +91,39 @@ function puissanceLevel2() {
     return { question, answer };
 }
 
-// Level 3: Multiplication and division with negative exponents
+// Level 3: Multiplication and division with 3 to 4 factors, including negative numbers and exponents
 function puissanceLevel3() {
     const base = randInt(2, 5);
-    const exponent1 = randInt(-5, 5);
-    const exponent2 = randInt(-5, 5);
+    const numFactors = randInt(3, 4);
+    const exponents = Array.from({ length: numFactors }, () => randInt(-5, 5));
+    const operations = Array.from({ length: numFactors - 1 }, () => randChoice(['multiply', 'divide']));
 
-    const operation = randChoice(['\\times', '\\div']);
+    let numerator = `${base}^{${exponents[0]}}`;
+    let denominator = '';
+    let questionParts = [`${base}^{${exponents[0]}}`];
 
-    const question = ` ${base}^{${exponent1}} ${operation} ${base}^{${exponent2}} `;
+    let combinedExponent = exponents[0];
 
-    let combinedExponent;
-    if (operation === '\\times') {
-        combinedExponent = exponent1 + exponent2;
+    for (let i = 1; i < numFactors; i++) {
+        if (operations[i-1] === 'multiply') {
+            questionParts.push(`\\times ${base}^{${exponents[i]}}`);
+            numerator += ` \\times ${base}^{${exponents[i]}}`;
+            combinedExponent += exponents[i];
+        } else {
+            if (denominator === '') {
+                denominator = `${base}^{${exponents[i]}}`;
+            } else {
+                denominator += ` \\times ${base}^{${exponents[i]}}`;
+            }
+            combinedExponent -= exponents[i];
+        }
+    }
+
+    let question;
+    if (denominator === '') {
+        question = questionParts.join(' ');
     } else {
-        combinedExponent = exponent1 - exponent2;
+        question = `\\frac{${numerator}}{${denominator}}`;
     }
 
     const answer = ` ${base}^{${combinedExponent}} `;
@@ -113,11 +131,12 @@ function puissanceLevel3() {
     return { question, answer };
 }
 
-// Level 4: Power of a power
+
+// Level 4: Power of a power (including negative exponents)
 function puissanceLevel4() {
     const base = randInt(2, 5);
-    const exponent1 = randInt(1, 5);
-    const exponent2 = randInt(1, 5);
+    const exponent1 = randInt(-5, 5);
+    const exponent2 = randInt(-5, 5);
 
     const question = ` \\left( ${base}^{${exponent1}} \\right)^{${exponent2}} `;
     const answerExponent = exponent1 * exponent2;
@@ -126,6 +145,7 @@ function puissanceLevel4() {
 
     return { question, answer };
 }
+
 
 // Level 5: Expressions with multiple variables and positive exponents
 function puissanceLevel5() {
@@ -157,8 +177,17 @@ function puissanceLevel6() {
     const exponent2 = randInt(-5, 5);
     const exponent3 = randInt(1, 3);
 
-    const question = ` \\left( ${base}^{${exponent1}} \\times ${base}^{${exponent2}} \\right)^{${exponent3}} `;
-    const combinedExponent = (exponent1 + exponent2) * exponent3;
+    const operation = randChoice(['multiply', 'divide']);
+
+    let question, combinedExponent;
+
+    if (operation === 'multiply') {
+        question = ` \\left( ${base}^{${exponent1}} \\times ${base}^{${exponent2}} \\right)^{${exponent3}} `;
+        combinedExponent = (exponent1 + exponent2) * exponent3;
+    } else {
+        question = ` \\left( \\frac{${base}^{${exponent1}}}{${base}^{${exponent2}}} \\right)^{${exponent3}} `;
+        combinedExponent = (exponent1 - exponent2) * exponent3;
+    }
 
     const answer = ` ${base}^{${combinedExponent}} `;
 
