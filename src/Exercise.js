@@ -11,6 +11,8 @@ const Exercise = ({ exercise, index }) => {
     setShowAnswer(false);
   }, [exercise]);
 
+  const isLevel8 = exercise.level === 8; // Assuming you pass the level as a prop
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -20,8 +22,7 @@ const Exercise = ({ exercise, index }) => {
       <Paper elevation={3} className="exercise" style={{ padding: '20px', marginBottom: '20px' }}>
         <Typography variant="h6">Exercice {index + 1}</Typography>
         <Typography>
-        <strong style={{ fontSize: '16px' }}>{exercise.questionText}</strong>
-
+          <strong style={{ fontSize: '16px' }}>{exercise.questionText}</strong>
           <BlockMath math={exercise.question} />
         </Typography>
         <Button
@@ -33,19 +34,25 @@ const Exercise = ({ exercise, index }) => {
           {showAnswer ? 'Cacher la Réponse' : 'Afficher la Réponse'}
         </Button>
         {showAnswer && (
-          <div
-            style={{ 
-              marginTop: '10px', 
-              backgroundColor: '#06ff00',
-              padding: '1px',
-              borderRadius: '4px'
-            }}
-          >
-            <Typography>
-              <strong>Réponse :</strong> <BlockMath math={exercise.answer} />
-            </Typography>
-          </div>
-        )}
+  <div
+    style={{ 
+      marginTop: '10px', 
+      backgroundColor: '#e6ffe6',
+      padding: '10px',
+      borderRadius: '4px',
+      maxWidth: '100%',
+      maxHeight: '200px',
+      overflowY: 'auto',
+      overflowX: 'hidden'
+    }}
+  >
+    <Typography>
+      <strong>Réponse :</strong>
+      <BlockMath math={exercise.answer} />
+    </Typography>
+  </div>
+)}
+
       </Paper>
     </motion.div>
   );

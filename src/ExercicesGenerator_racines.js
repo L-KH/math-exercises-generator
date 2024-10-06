@@ -2,7 +2,8 @@
 
 import React, { useState, useCallback } from 'react';
 import Exercise from './Exercise'; // Ensure this component renders MathJax expressions
-import { Button, TextField, Grid, Card, CardContent } from '@mui/material';
+import { Button, TextField, Grid, Card, CardContent, Dialog, Typography  } from '@mui/material';
+
 
 // Helper functions
 function randInt(min, max) {
@@ -25,9 +26,14 @@ function isPerfectSquare(n) {
 // Main Exercise Generator function
 function createExercise(level) {
     let exercise = {};
-    let questionText = 'Simplifier :';
+    let questionText = 'Calculer :';
 
     exercise = createRacineExercise(level);
+
+    // Adjust question text for Level 3
+    if (level === 3) {
+        questionText = 'Écrire avec un dénominateur entier :';
+    }
 
     return { ...exercise, questionText };
 }
@@ -39,6 +45,8 @@ function createRacineExercise(level) {
             return racineLevel1();
         case 2:
             return racineLevel2();
+        case '2plus':
+            return racineLevel2plus();
         case 3:
             return racineLevel3();
         case 4:
@@ -51,26 +59,250 @@ function createRacineExercise(level) {
             return racineLevel7();
         case 8:
             return racineLevel8();
+        case 'EQ':
+            return racineLevelEQ();
         default:
             return racineLevel1();
     }
 }
 
-// Level 1: Basic calculations involving squares and square roots
+// Level 1: Calculations like 4, 16, 0.49, etc.
 function racineLevel1() {
-    const a = randInt(2, 10);
-    const questionOptions = [
-        `\\left( \\sqrt{${a}} \\right)^2`,
-        `\\sqrt{${a}^2}`,
+    const exercises = [
+        () => {
+            const a = randChoice([4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225]);
+            return {
+                question: `\\sqrt{${a}}`,
+                answer: `${Math.sqrt(a)}`
+            };
+        },
+        () => {
+            const a = randChoice([4, 9, 16, 25, 36, 49, 64, 81]);
+            return {
+                question: `\\sqrt{\\sqrt{${a * a}}}`,
+                answer: `${Math.sqrt(a)}`
+            };
+        },
+        () => {
+            const fractions = [
+                { numerator: 4, denominator: 9 },
+                { numerator: 1, denominator: 16 },
+                { numerator: 9, denominator: 25 },
+            ];
+            const frac = randChoice(fractions);
+            return {
+                question: `\\sqrt{\\dfrac{${frac.numerator}}{${frac.denominator}}}`,
+                answer: `\\dfrac{${Math.sqrt(frac.numerator)}}{${Math.sqrt(frac.denominator)}}`
+            };
+        },
+        () => {
+            const decimals = [0.25, 0.04, 0.49, 0.36, 0.81];
+            const decimal = randChoice(decimals);
+            return {
+                question: `\\sqrt{${decimal}}`,
+                answer: `${Math.sqrt(decimal)}`
+            };
+        },
+        () => {
+            const a = randInt(1, 10);
+            return {
+                question: `\\sqrt{(-${a})^{2}}`,
+                answer: `${a}`
+            };
+        },
+        () => {
+            const values = [1, 4, 9, 16, 25];
+            const a = randChoice(values);
+            const b = randChoice(values);
+            return {
+                question: `\\sqrt{${a}} + \\sqrt{${b}}`,
+                answer: `${Math.sqrt(a) + Math.sqrt(b)}`
+            };
+        }
     ];
-    const question = randChoice(questionOptions);
-    const answer = `${a}`;
+
+    return randChoice(exercises)();
+}
+
+// Level 2: Multiplication and Division of radicals
+function racineLevel2() {
+    const operations = [
+        {
+            generate: () => {
+                const a = randInt(2, 20);
+                const b = randInt(2, 20);
+                return {
+                    question: `\\sqrt{${a}} \\times \\sqrt{${b}}`,
+                    answer: `\\sqrt{${a * b}}`
+                };
+            }
+        },
+        {
+            generate: () => {
+                const a = randInt(2, 20);
+                const b = randInt(2, 10);
+                const c = a * b;
+                return {
+                    question: `\\dfrac{\\sqrt{${c}}}{\\sqrt{${a}}}`,
+                    answer: `\\sqrt{${b}}`
+                };
+            }
+        },
+        {
+            generate: () => {
+                const a = randInt(2, 15);
+                const b = randInt(2, 15);
+                const numerator = a * b;
+                return {
+                    question: `\\dfrac{\\sqrt{${a}}}{\\sqrt{${b}}}`,
+                    answer: `\\sqrt{\\dfrac{${a}}{${b}}}`
+                };
+            }
+        },
+        {
+            generate: () => {
+                const a = randInt(2, 20);
+                return {
+                    question: `(\\sqrt{${a}})^{2}`,
+                    answer: `${a}`
+                };
+            }
+        }
+    ];
+
+    return randChoice(operations).generate();
+}
+
+// Level 2+: Addition and Subtraction of radicals
+// Level 2+: Addition and Subtraction of radicals (Remarkable Identities)
+function racineLevel2plus() {
+    const operations = [
+        // (a + b)²
+        () => {
+            const a = randInt(2, 20);
+            const b = randInt(2, 20);
+            return {
+                question: `(\\sqrt{${a}} + \\sqrt{${b}})^2`,
+                answer: `${a} + ${b} + 2\\sqrt{${a * b}}`
+            };
+        },
+        // (a - b)²
+        () => {
+            const a = randInt(2, 20);
+            const b = randInt(2, 20);
+            return {
+                question: `(\\sqrt{${a}} - \\sqrt{${b}})^2`,
+                answer: `${a} + ${b} - 2\\sqrt{${a * b}}`
+            };
+        },
+        // (a + b)(a - b)
+        () => {
+            const a = randInt(2, 20);
+            const b = randInt(2, 20);
+            return {
+                question: `(\\sqrt{${a}} + \\sqrt{${b}})(\\sqrt{${a}} - \\sqrt{${b}})`,
+                answer: `${a} - ${b}`
+            };
+        },
+        // Variation: (ka + b)²
+        () => {
+            const a = randInt(2, 20);
+            const b = randInt(2, 20);
+            const k = randInt(2, 5);
+            return {
+                question: `(${k}\\sqrt{${a}} + \\sqrt{${b}})^2`,
+                answer: `${k*k*a} + ${b} + ${2*k}\\sqrt{${a * b}}`
+            };
+        },
+        // Variation: (a + kb)²
+        () => {
+            const a = randInt(2, 20);
+            const b = randInt(2, 20);
+            const k = randInt(2, 5);
+            return {
+                question: `(\\sqrt{${a}} + ${k}\\sqrt{${b}})^2`,
+                answer: `${a} + ${k*k*b} + ${2*k}\\sqrt{${a * b}}`
+            };
+        }
+    ];
+
+    return randChoice(operations)();
+}
+
+
+
+// Level 3: Rationalize denominators with a single term
+function racineLevel3() {
+    const numerators = [1, 2, 3, 5, -1, -2];
+    const radicands = [2, 3, 5, 7, 11];
+
+    const numerator = randChoice(numerators);
+    const radicand = randChoice(radicands);
+
+    const question = ` \\dfrac{${numerator}}{\\sqrt{${radicand}}} `;
+
+    // Rationalize the denominator
+    const newNumerator = `${numerator} \\sqrt{${radicand}}`;
+    const newDenominator = radicand;
+
+    const simplifiedNumerator = numerator === 1 ? '' : numerator === -1 ? '-' : numerator;
+
+    const answer = ` \\dfrac{${simplifiedNumerator} \\sqrt{${radicand}}}{${newDenominator}} `;
 
     return { question, answer };
 }
 
-// Level 2: Simplifying sums and differences of radicals with perfect squares
-function racineLevel2() {
+// Level 4: Rationalizing denominators with binomial denominators
+function racineLevel4() {
+    const numerators = [1, 2, 3, -1];
+    const radicands = [2, 3, 5];
+    const constants = [1, -1, 2, -2];
+
+    const numerator = randChoice(numerators);
+    const radicand = randChoice(radicands);
+    const constant = randChoice(constants);
+
+    const denominator = `\\sqrt{${radicand}} ${constant >= 0 ? '+ ' : '- '} ${Math.abs(constant)}`;
+
+    const question = ` \\dfrac{${numerator}}{${denominator}} `;
+
+    // Rationalize the denominator by multiplying numerator and denominator by the conjugate
+    const conjugate = `\\sqrt{${radicand}} ${constant >= 0 ? '- ' : '+ '} ${Math.abs(constant)}`;
+
+    const newNumerator = `${numerator} \\times (${conjugate})`;
+    const denominatorProduct = `( \\sqrt{${radicand}} )^{2} - ( ${constant} )^{2}`;
+    const simplifiedDenominator = radicand - constant * constant;
+
+    const answer = ` \\dfrac{${newNumerator}}{${simplifiedDenominator}} `;
+
+    return { question, answer };
+}
+
+// Level 5: Simplifying expressions involving variables under radicals
+function racineLevel5() {
+    const variables = ['a', 'b', 'c', 'x', 'y', 'z'];
+    const var1 = randChoice(variables);
+    const var2 = randChoice(variables.filter(v => v !== var1));
+    const var3 = randChoice(variables.filter(v => v !== var1 && v !== var2));
+
+    const exponents = [2, 4, 6, 8];
+    const exp1 = randChoice(exponents);
+    const exp2 = randChoice(exponents);
+    const exp3 = randChoice(exponents);
+
+    const question = ` \\sqrt{ ${var1}^{${exp1}} ${var2}^{${exp2}} ${var3}^{${exp3}} } `;
+
+    const simplifiedVar1 = exp1 / 2 >= 1 ? `${var1}^{${exp1 / 2}}` : '';
+    const simplifiedVar2 = exp2 / 2 >= 1 ? `${var2}^{${exp2 / 2}}` : '';
+    const simplifiedVar3 = exp3 / 2 >= 1 ? `${var3}^{${exp3 / 2}}` : '';
+
+    const answer = [simplifiedVar1, simplifiedVar2, simplifiedVar3].filter(Boolean).join(' ');
+
+    return { question, answer };
+}
+
+// Level 6: Simplifying sums and differences of radicals with perfect squares
+function racineLevel6() {
     const radicands = [12, 27, 75, 20, 45, 80];
     const coefficients = [1, 2, 3, -1, -2];
 
@@ -112,10 +344,8 @@ function racineLevel2() {
     return { question, answer };
 }
 
-// Level 3: Simplifying complex radical expressions with coefficients and fractions
-// Level 6: More complex simplification of sums and differences of radicals
-// Level 6: More complex simplification of sums and differences of radicals
-function racineLevel6() {
+// Level 7: More complex simplification of sums and differences of radicals
+function racineLevel7() {
     const radicands = [12, 27, 48, 75, 108, 147, 192, 243, 300, 375];
     const coefficients = [1, 2, 3, 4, 5, -1, -2, -3, -4, -5];
 
@@ -165,162 +395,190 @@ function racineLevel6() {
     return { question, answer };
 }
 
-// Helper function to simplify square roots
-function simplifySquareRoot(coeff, radicand) {
-    let outsideRoot = 1;
-    let insideRoot = radicand;
-
-    for (let i = 2; i * i <= insideRoot; i++) {
-        while (insideRoot % (i * i) === 0) {
-            outsideRoot *= i;
-            insideRoot /= i * i;
-        }
-    }
-
-    return { coeff, outsideRoot, insideRoot };
-}
-
-
-// Level 4: Rationalizing denominators with a single term in the denominator
-function racineLevel4() {
-    const numerators = [1, 2, 3, 5, -1, -2];
-    const radicands = [2, 3, 5, 7, 11];
-
-    const numerator = randChoice(numerators);
-    const radicand = randChoice(radicands);
-
-    const question = ` \\dfrac{${numerator}}{\\sqrt{${radicand}}} `;
-
-    // Rationalize the denominator
-    const newNumerator = `${numerator} \\sqrt{${radicand}}`;
-    const newDenominator = radicand;
-
-    const simplifiedNumerator = numerator === 1 ? '' : numerator === -1 ? '-' : numerator;
-
-    const answer = ` \\dfrac{${simplifiedNumerator} \\sqrt{${radicand}}}{${newDenominator}} `;
-
-    return { question, answer };
-}
-
-// Level 5: Rationalizing denominators with binomial denominators
-function racineLevel5() {
-    const numerators = [1, 2, 3, -1];
-    const radicands = [2, 3, 5];
-    const constants = [1, -1, 2, -2];
-
-    const numerator = randChoice(numerators);
-    const radicand = randChoice(radicands);
-    const constant = randChoice(constants);
-
-    const denominator = `\\sqrt{${radicand}} ${constant >= 0 ? '+ ' : '- '} ${Math.abs(constant)}`;
-
-    const question = ` \\dfrac{${numerator}}{${denominator}} `;
-
-    // Rationalize the denominator by multiplying numerator and denominator by the conjugate
-    const conjugate = `\\sqrt{${radicand}} ${constant >= 0 ? '- ' : '+ '} ${Math.abs(constant)}`;
-
-    const newNumerator = `${numerator} \\times ( ${conjugate} )`;
-    const denominatorProduct = `( \\sqrt{${radicand}} )^{2} - ( ${constant} )^{2}`;
-    const simplifiedDenominator = radicand - constant * constant;
-
-    const answer = ` \\dfrac{${newNumerator}}{${simplifiedDenominator}} `;
-
-    return { question, answer };
-}
-
-// Level 6: Simplifying expressions involving variables under radicals (VARIED)
-function racineLevel3() {
-    const variables = ['a', 'b', 'c', 'x', 'y', 'z'];
-    const var1 = randChoice(variables);
-    const var2 = randChoice(variables.filter(v => v !== var1));
-    const var3 = randChoice(variables.filter(v => v !== var1 && v !== var2));
-
-    const exponents = [2, 4, 6, 8];
-    const exp1 = randChoice(exponents);
-    const exp2 = randChoice(exponents);
-    const exp3 = randChoice(exponents);
-
-    const question = ` \\sqrt{ ${var1}^{${exp1}} ${var2}^{${exp2}} ${var3}^{${exp3}} } `;
-
-    const simplifiedVar1 = exp1 / 2 >= 1 ? `${var1}^{${exp1 / 2}}` : '';
-    const simplifiedVar2 = exp2 / 2 >= 1 ? `${var2}^{${exp2 / 2}}` : '';
-    const simplifiedVar3 = exp3 / 2 >= 1 ? `${var3}^{${exp3 / 2}}` : '';
-
-    const answer = [simplifiedVar1, simplifiedVar2, simplifiedVar3].filter(Boolean).join(' ');
-
-    return { question, answer };
-}
-
-// Level 7: Operations with radicals and exponents
-// Level 7: Complex operations with radicals and exponents
-function racineLevel7() {
+// Level 8: Diversification of previous levels with increased difficulty
+// Level 8: Diversification of previous levels with increased difficulty
+function racineLevel8() {
     const operations = [
-        {
-            generate: () => {
-                const a = randInt(2, 10);
-                const b = randInt(2, 10);
-                return {
-                    question: `(\\sqrt{${a}} + \\sqrt{${b}})^2`,
-                    answer: `${a} + ${b} + 2\\sqrt{${a * b}}`
-                };
-            }
+        // Exercise Type A: Rationalization and simplification
+        () => {
+            // Simplify the expression: (a + b) / (a - b)
+            const a = randChoice([9, 16, 25, 36]);
+            const b = randChoice([1, 4, 9, 16]);
+            if (a === b) return null; // Avoid zero denominator
+            const question = `\\dfrac{ \\sqrt{${a}} + \\sqrt{${b}} }{ \\sqrt{${a}} - \\sqrt{${b}} }`;
+
+            // Multiply numerator and denominator by the conjugate
+            // Answer: (a + b)^2 / (a - b)
+            const numerator = `( \\sqrt{${a}} + \\sqrt{${b}} )^{2}`;
+            const denominator = `${a - b}`;
+            const simplifiedNumerator = `${a} + 2 \\sqrt{${a * b}} + ${b}`;
+            const answer = `\\dfrac{ ${simplifiedNumerator} }{ ${denominator} }`;
+
+            return { question, answer };
         },
-        {
-            generate: () => {
-                const a = randInt(2, 10);
-                const b = randInt(2, 10);
-                return {
-                    question: `(\\sqrt{${a}} - \\sqrt{${b}})^2`,
-                    answer: `${a} + ${b} - 2\\sqrt{${a * b}}`
-                };
+
+        // Exercise Type B: Simplifying sums of radicals
+        () => {
+            // Simplify the expression: a + b + c
+            const radicands = [12, 27, 75, 20, 45, 80, 18];
+            const a = randChoice(radicands);
+            const b = randChoice(radicands);
+            const c = randChoice(radicands);
+            const question = `\\sqrt{${a}} + \\sqrt{${b}} + \\sqrt{${c}}`;
+
+            // Simplify each radical
+            function simplifyRadical(n) {
+                let outside = 1;
+                let inside = n;
+                for (let i = 2; i <= Math.floor(Math.sqrt(inside)); i++) {
+                    while (inside % (i * i) === 0) {
+                        outside *= i;
+                        inside /= i * i;
+                    }
+                }
+                if (inside === 1) {
+                    return `${outside}`;
+                } else {
+                    return `${outside === 1 ? '' : outside} \\sqrt{${inside}}`;
+                }
             }
+
+            const simplifiedA = simplifyRadical(a);
+            const simplifiedB = simplifyRadical(b);
+            const simplifiedC = simplifyRadical(c);
+            const answer = `${simplifiedA} + ${simplifiedB} + ${simplifiedC}`;
+
+            return { question, answer };
         },
-        {
-            generate: () => {
-                const a = randInt(2, 10);
-                const b = randInt(2, 10);
-                return {
-                    question: `\\sqrt{${a}} \\cdot \\sqrt{${b}}`,
-                    answer: `\\sqrt{${a * b}}`
-                };
-            }
+
+        // Exercise Type C: Multiplication involving variables
+        () => {
+            // Simplify the expression: (a²b) × (ab³)
+            const a = randInt(2, 5);
+            const b = randInt(2, 5);
+            const question = `\\sqrt{${a}^2 \\times ${b}} \\times \\sqrt{${a} \\times ${b}^3}`;
+
+            // Simplify the expression step by step
+            // (a²b) = ab
+            // (ab³) = (a) × bb
+            // Multiply: ab × (a × bb) = a × a × b × b × b = a × b × a × b = a × b² × a
+            const answer = `${a} \\times ${b * b} \\sqrt{${a}}`;
+
+            return { question, answer };
         },
-        {
-            generate: () => {
-                const a = randInt(2, 10);
-                const b = randInt(2, 10);
-                const c = a * b;
-                return {
-                    question: `\\frac{\\sqrt{${c}}}{\\sqrt{${a}}}`,
-                    answer: `\\sqrt{${b}}`
-                };
+
+        // Exercise Type E: Rationalization with binomial denominators
+        () => {
+            // Simplify the expression: 1 / (a + b)
+            const a = randChoice([2, 3, 5]);
+            const b = randChoice([2, 3, 5].filter(n => n !== a));
+            const question = `\\dfrac{1}{ \\sqrt{${a}} + \\sqrt{${b}} }`;
+
+            // Multiply numerator and denominator by the conjugate
+            // Result: (a - b) / (a - b)
+            const denominator = `${a - b}`;
+            const answer = `\\dfrac{ \\sqrt{${a}} - \\sqrt{${b}} }{ ${denominator} }`;
+
+            return { question, answer };
+        },
+
+        // Exercise Type F: Simplifying radicals with variables and exponents
+        () => {
+            // Simplify the expression: (x^m y^n)
+            const variables = ['x', 'y', 'z'];
+            const var1 = randChoice(variables);
+            const var2 = randChoice(variables.filter(v => v !== var1));
+            const exp1 = randInt(2, 4) * 2; // Even exponent
+            const exp2 = randInt(1, 5) * 2; // Even exponent
+            const question = `\\sqrt{ ${var1}^{${exp1}} ${var2}^{${exp2}} }`;
+            const simplifiedVar1 = `${var1}^{${exp1 / 2}}`;
+            const simplifiedVar2 = `${var2}^{${exp2 / 2}}`;
+            const answer = `${simplifiedVar1} ${simplifiedVar2}`;
+
+            return { question, answer };
+        },
+
+        // Exercise Type G: Combining rationalization and conjugates
+        () => {
+            // Simplify the expression: (a - b) / (a + b)
+            const a = randChoice([2, 3, 5]);
+            const b = randChoice([2, 3, 5].filter(n => n !== a));
+            const numerator = `\\sqrt{${a}} - \\sqrt{${b}}`;
+            const denominator = `\\sqrt{${a}} + \\sqrt{${b}}`;
+            const question = `\\dfrac{ ${numerator} }{ ${denominator} }`;
+
+            // Multiply numerator and denominator by (a - b)
+            // Result: (a - 2(ab) + b) / (a - b)
+            const denominatorValue = a - b;
+            const simplifiedNumerator = `${a} - 2 \\sqrt{${a * b}} + ${b}`;
+            const answer = `\\dfrac{ ${simplifiedNumerator} }{ ${denominatorValue} }`;
+
+            return { question, answer };
+        },
+
+        // Exercise Type H: Simplifying expressions with coefficients
+        () => {
+            // Simplify the expression: 218 - 38 + 50
+            const terms = [];
+            for (let i = 0; i < 3; i++) {
+                const coeff = randChoice([1, 2, -1, -2, 3, -3]);
+                const radicand = randChoice([8, 18, 32, 50, 72]);
+                terms.push(`${coeff === 1 ? '' : coeff === -1 ? '-' : coeff} \\sqrt{${radicand}}`);
             }
-        }
+            const question = terms.join(' ').replace(/\s-\s/g, ' - ').replace(/\s\+\s/g, ' + ');
+
+            // Simplify each radical and combine like terms
+            function simplifyTerm(term) {
+                const [coeffStr, sqrtPart] = term.split('\\sqrt{');
+                const coeff = coeffStr === '' ? 1 : coeffStr === '-' ? -1 : parseInt(coeffStr);
+                const radicand = parseInt(sqrtPart.replace('}', ''));
+                let outside = 1;
+                let inside = radicand;
+                for (let i = 2; i <= Math.floor(Math.sqrt(inside)); i++) {
+                    while (inside % (i * i) === 0) {
+                        outside *= i;
+                        inside /= i * i;
+                    }
+                }
+                const totalCoeff = coeff * outside;
+                return { coeff: totalCoeff, radicand: inside };
+            }
+
+            const simplifiedTerms = terms.map(simplifyTerm);
+            const likeTerms = {};
+            simplifiedTerms.forEach(({ coeff, radicand }) => {
+                const key = radicand;
+                if (likeTerms[key]) {
+                    likeTerms[key] += coeff;
+                } else {
+                    likeTerms[key] = coeff;
+                }
+            });
+
+            const answerTerms = Object.entries(likeTerms)
+                .filter(([_, coeff]) => coeff !== 0)
+                .map(([radicand, coeff]) => {
+                    const coeffStr = coeff === 1 ? '' : coeff === -1 ? '-' : coeff;
+                    return `${coeffStr} \\sqrt{${radicand}}`;
+                });
+            const answer = answerTerms.join(' ').replace(/\s-\s/g, ' - ').replace(/\s\+\s/g, ' + ');
+
+            return { question, answer };
+        },
     ];
 
-    return randChoice(operations).generate();
+    // Randomly select an exercise from the operations list
+    let exercise = null;
+    while (!exercise) {
+        exercise = randChoice(operations)();
+    }
+    exercise.level = 8;
+    exercise.questionText = "Simplifiez l'expression suivante :";
+    return exercise;
 }
 
-// Helper function to convert decimal to fraction
-function toFraction(decimal) {
-    const tolerance = 1.0E-6;
-    let h1 = 1, h2 = 0, k1 = 0, k2 = 1;
-    let b = decimal;
-    do {
-        let a = Math.floor(b);
-        let aux = h1;
-        h1 = a * h1 + h2;
-        h2 = aux;
-        aux = k1;
-        k1 = a * k1 + k2;
-        k2 = aux;
-        b = 1 / (b - a);
-    } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
-    return [h1, k1];
-}
-
-// Level 8: Simple quadratic equations (ADJUSTED)
-function racineLevel8() {
+// Level EQ: Simple quadratic equations
+function racineLevelEQ() {
     const coefficients = [1, 2, 3, 5, 7, 9];
     const constants = [4, 5, 7, 9, 12, 16, 25];
 
@@ -362,6 +620,21 @@ function racineLevel8() {
     return { question, answer };
 }
 
+// Helper function to simplify square roots
+function simplifySquareRoot(coeff, radicand) {
+    let outsideRoot = 1;
+    let insideRoot = radicand;
+
+    for (let i = 2; i * i <= insideRoot; i++) {
+        while (insideRoot % (i * i) === 0) {
+            outsideRoot *= i;
+            insideRoot /= i * i;
+        }
+    }
+
+    return { coeff, outsideRoot, insideRoot };
+}
+
 // Helper function to simplify square roots with coefficients
 function simplifySquareRootWithCoeff(coeff, radicand) {
     let largestSquare = 1;
@@ -385,11 +658,21 @@ function simplifySquareRootWithCoeff(coeff, radicand) {
     };
 }
 
+// Helper function to compute expressions (for Level 8)
+function computeExpression(expression) {
+    // This is a placeholder. Implementing a full math parser is beyond the scope.
+    // In practice, you could use math.js or another library to evaluate expressions.
+    return 'Simplify the expression step by step.';
+}
+
 // Main component
 function ExerciseGeneratorRacines() {
     const [exercises, setExercises] = useState([]);
     const [numExercises, setNumExercises] = useState(10);
     const [level, setLevel] = useState(1);
+    const [showPDFGallery, setShowPDFGallery] = useState(false);
+
+
 
     const generateExercises = useCallback((selectedLevel = level) => {
         const newExercises = [];
@@ -398,20 +681,34 @@ function ExerciseGeneratorRacines() {
         }
         setExercises(newExercises);
     }, [numExercises, level]);
-    
+
 
     // Level colors for buttons
     const levelColors = {
         1: '#d8ebff',
         2: '#b0d4ff',
+        '2plus': '#a0c0ff',
         3: '#89c4ff',
         4: '#62b5ff',
         5: '#3aa5ff',
         6: '#0080ff',
         7: '#0059b3',
         8: '#002966',
+        'EQ': '#800080', // Purple color for equations level
     };
-
+    const PDFPreview = ({ pdfFiles, onSelectPDF }) => {
+        return (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+            {pdfFiles.map((pdf, index) => (
+              <div key={index} style={{ border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}>
+                <h3>{pdf.title}</h3>
+                <button onClick={() => onSelectPDF(pdf.file)}>View PDF</button>
+              </div>
+            ))}
+          </div>
+        );
+      };
+      
     return (
         <div className="container_racine">
             <Card sx={{ mb: 0.4, p: 0.2 }}>
@@ -429,7 +726,7 @@ function ExerciseGeneratorRacines() {
                         </Grid>
                         <Grid item xs={12}>
                             <div className="level-buttons" style={{ textAlign: 'center', marginTop: '20px' }}>
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map((lvl) => (
+                                {[1, 2, '2plus', 3, 4, 5, 6, 7, 8, 'EQ'].map((lvl) => (
                                     <Button
                                         key={lvl}
                                         onClick={() => {
@@ -443,7 +740,7 @@ function ExerciseGeneratorRacines() {
                                             color: '#fff',
                                         }}
                                     >
-                                        Niveau {lvl}
+                                        Niveau {lvl === '2plus' ? '2+' : lvl === 'EQ' ? 'EQ (Équations)' : lvl}
                                     </Button>
                                 ))}
                             </div>
@@ -465,8 +762,9 @@ function ExerciseGeneratorRacines() {
                     <Button variant="outlined" onClick={() => window.print()}>Imprimer les Exercices</Button>
                 </div>
             )}
-        </div>
-    );
-}
+
+    </div>
+  );
+};
 
 export default ExerciseGeneratorRacines;
