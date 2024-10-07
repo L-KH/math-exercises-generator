@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -10,10 +10,18 @@ import ExerciseGeneratorPuissance from './ExercicesGenerator_puissance&racine';
 import ExercicesGenerator_racines from './ExercicesGenerator_racines';
 import Navbar from './Navbar';
 import './App.css';
+import ReactGA from 'react-ga4';
+import { Analytics } from '@vercel/analytics/react';
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
+  ReactGA.initialize('G-BREBK5DV0J');
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+  }, []);
+  
   const theme = useMemo(
     () =>
       createTheme({
@@ -35,6 +43,7 @@ function App() {
   };
 
   return (
+    <>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <MathJaxContext>
@@ -57,6 +66,8 @@ function App() {
         </Router>
       </MathJaxContext>
     </ThemeProvider>
+    <Analytics />
+    </>
   );
 }
 

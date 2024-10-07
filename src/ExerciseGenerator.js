@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Exercise from './Exercise';
 import Countdown from './Countdown';
 import { Button, TextField, Checkbox, FormControlLabel, Select, MenuItem, Grid , Card, CardContent} from '@mui/material';
 import QuizCard from './QuizCard';
 import Quiz from './Quiz';
+import ReactGA from 'react-ga4';
 
 
  
@@ -433,6 +434,20 @@ function ExerciseGenerator() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizDifficulty, setQuizDifficulty] = useState(null);
 
+
+  useEffect(() => {
+    const startTime = new Date();
+    return () => {
+      const endTime = new Date();
+      const timeSpent = (endTime - startTime) / 1000; // in seconds
+      ReactGA.event({
+        category: 'User Engagement',
+        action: 'Time Spent',
+        label: 'Racine Carrée',
+        value: Math.round(timeSpent)
+      });
+    };
+  }, []);
   const generateExercises = useCallback((level) => {
     const newExercises = [];
     for (let i = 0; i < numExercises; i++) {
@@ -440,7 +455,13 @@ function ExerciseGenerator() {
     }
     setExercises(newExercises);
     setKey(prevKey => prevKey + 1);
-  }, [numExercises, exerciseType]);
+    ReactGA.event({
+      category: 'Exercise',
+      action: 'Generate',
+      label: `Level ${selectedLevel}`,
+      value: numExercises
+    });
+  }, [numExercises, level]);
  const handleStartQuiz = (difficulty) => {
     setQuizDifficulty(difficulty);
     setShowQuiz(true);

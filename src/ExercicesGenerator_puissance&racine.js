@@ -1,11 +1,12 @@
 // ExercicesGenerator_puissance.js
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Exercise from './Exercise'; // Ensure this component renders MathJax expressions
 import { Button, TextField, Select, MenuItem, Grid, Card, CardContent, Collapse, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MiniDocument from './MiniDocument'; // Make sure to create this component in a separate file
 import { MathJaxContext, MathJax } from 'better-react-mathjax';
+import ReactGA from 'react-ga4';
 
 // Helper functions
 function randInt(min, max) {
@@ -346,7 +347,19 @@ function ExerciseGeneratorPuissance() {
     const [exerciseKey, setExerciseKey] = useState(0);
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
 
-
+    useEffect(() => {
+        const startTime = new Date();
+        return () => {
+          const endTime = new Date();
+          const timeSpent = (endTime - startTime) / 1000; // in seconds
+          ReactGA.event({
+            category: 'User Engagement',
+            action: 'Time Spent',
+            label: 'Racine Carrée',
+            value: Math.round(timeSpent)
+          });
+        };
+      }, []);
     const generateExercises = useCallback((selectedLevel = level) => {
         const newExercises = [];
         for (let i = 0; i < numExercises; i++) {
@@ -354,7 +367,13 @@ function ExerciseGeneratorPuissance() {
         }
         setExercises(newExercises);
         setExerciseKey(prevKey => prevKey + 1); // Increment the key
-    }, [numExercises, level]);
+        ReactGA.event({
+            category: 'Exercise',
+            action: 'Generate',
+            label: `Level ${selectedLevel}`,
+            value: numExercises
+          });
+        }, [numExercises, level]);
 
     // Level colors for buttons
     const levelColors = {

@@ -1,9 +1,9 @@
 // ExercicesGenerator_racines.js
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect} from 'react';
 import Exercise from './Exercise'; // Ensure this component renders MathJax expressions
 import { Button, TextField, Grid, Card, CardContent, Dialog, Typography  } from '@mui/material';
-
+import ReactGA from 'react-ga4';
 
 // Helper functions
 function randInt(min, max) {
@@ -673,6 +673,19 @@ function ExerciseGeneratorRacines() {
     const [showPDFGallery, setShowPDFGallery] = useState(false);
 
 
+    useEffect(() => {
+        const startTime = new Date();
+        return () => {
+          const endTime = new Date();
+          const timeSpent = (endTime - startTime) / 1000; // in seconds
+          ReactGA.event({
+            category: 'User Engagement',
+            action: 'Time Spent',
+            label: 'Racine Carrée',
+            value: Math.round(timeSpent)
+          });
+        };
+      }, []);
 
     const generateExercises = useCallback((selectedLevel = level) => {
         const newExercises = [];
@@ -680,6 +693,12 @@ function ExerciseGeneratorRacines() {
             newExercises.push({...createExercise(selectedLevel), id: Date.now() + i});
         }
         setExercises(newExercises);
+        ReactGA.event({
+        category: 'Exercise',
+        action: 'Generate',
+        label: `Level ${selectedLevel}`,
+        value: numExercises
+    });
     }, [numExercises, level]);
 
 
