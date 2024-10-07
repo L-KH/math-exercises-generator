@@ -5,6 +5,7 @@ import { Button, TextField, Checkbox, FormControlLabel, Select, MenuItem, Grid ,
 import QuizCard from './QuizCard';
 import Quiz from './Quiz';
 import ReactGA from 'react-ga4';
+import { useLocation } from 'react-router-dom';
 
 
  
@@ -434,7 +435,12 @@ function ExerciseGenerator() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizDifficulty, setQuizDifficulty] = useState(null);
 
+  const location = useLocation();
 
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: location.pathname });
+  }, [location]);
+  
   useEffect(() => {
     const startTime = new Date();
     return () => {
@@ -443,11 +449,12 @@ function ExerciseGenerator() {
       ReactGA.event({
         category: 'User Engagement',
         action: 'Time Spent',
-        label: 'Racine Carrée',
+        label: 'Exercise Generator',
         value: Math.round(timeSpent)
       });
     };
   }, []);
+  
   const generateExercises = useCallback((level) => {
     const newExercises = [];
     for (let i = 0; i < numExercises; i++) {
@@ -458,19 +465,34 @@ function ExerciseGenerator() {
     ReactGA.event({
       category: 'Exercise',
       action: 'Generate',
-      label: `Level ${selectedLevel}`,
+      label: `Level ${level}`,
       value: numExercises
     });
-  }, [numExercises, level]);
- const handleStartQuiz = (difficulty) => {
+  }, [numExercises, exerciseType]);
+  
+  const handleStartQuiz = (difficulty) => {
     setQuizDifficulty(difficulty);
     setShowQuiz(true);
+    ReactGA.event({
+      category: 'Quiz',
+      action: 'Start',
+      label: difficulty
+    });
   };
+  
 
   const handleFinishQuiz = () => {
     setShowQuiz(false);
     setQuizDifficulty(null);
+    ReactGA.event({
+      category: 'Quiz',
+      action: 'Finish',
+      label: quizDifficulty
+    });
   };
+
+  
+  
   return (
     <div className="container">
       <Card className="custom-card">
