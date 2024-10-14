@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { MathJaxContext } from 'better-react-mathjax';
 import MainPage from './MainPage';
+import CoursesPage from './CoursesPage';
 import ExerciseGenerator from './ExerciseGenerator';
 import ExerciseGeneratorPuissance from './ExercicesGenerator_puissance&racine';
 import ExercicesGenerator_racines from './ExercicesGenerator_racines';
@@ -12,6 +13,10 @@ import Navbar from './Navbar';
 import './App.css';
 import ReactGA from 'react-ga4';
 import { Analytics } from '@vercel/analytics/react';
+import ClassroomSimulator from './ClassroomSimulator';
+import ClassSelector from './ClassSelector';
+import ExamGenerator from './ExamGenerator';
+
 
 
 function App() {
@@ -60,6 +65,10 @@ function App() {
                 <Route path="/developpement-factorisation" element={<ExerciseGenerator />} />
                 <Route path="/puissances-racines" element={<ExerciseGeneratorPuissance />} />
                 <Route path="/racines" element={<ExercicesGenerator_racines />} />
+                <Route path="/simulator" element={<ClassSelector />} />
+                <Route path="/simulator/class/:classNumber" element={<ClassroomSimulator />} />
+                <Route path="/courses/:subject" element={<CoursesPage />} />
+                <Route path="/exam" element={<ExamGenerator />} />
               </Routes>
             </div>
           </div>

@@ -1,0 +1,23 @@
+/* Exam.css */
+.exam-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .exam-exercise {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ccc;
+  }
+  
+  .exam-question {
+    margin-top: 10px;
+  }
+  
+  .exam-answer {
+    margin-top: 10px;
+    background-color: #e0ffe0;
+    padding: 10px;
+  }
+  

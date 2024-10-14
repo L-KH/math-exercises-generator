@@ -1,0 +1,35 @@
+{
+  "subject": "racines",
+  "sections": {
+    "courses": [
+      {
+        "id": 1,
+        "name": "Les racines carrées",
+        "filename": "racines_course1",
+        "imageCount": 11
+      }
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "name": "Série d'exercices 1",
+        "filename": "racines_ex1",
+        "imageCount": 1
+      }
+    ],
+    "challenges": [
+      {
+        "id": 1,
+        "name": "Défi 1: Problèmes complexes avec les racines",
+        "filename": "racines_challenge1",
+        "imageCount": 1
+      },
+      {
+        "id": 2,
+        "name": "Défi 2: Applications réelles des racines",
+        "filename": "racines_challenge2",
+        "imageCount": 2
+      }
+    ]
+  }
+}

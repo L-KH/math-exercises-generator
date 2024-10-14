@@ -715,18 +715,7 @@ function ExerciseGeneratorRacines() {
         8: '#002966',
         'EQ': '#800080', // Purple color for equations level
     };
-    const PDFPreview = ({ pdfFiles, onSelectPDF }) => {
-        return (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-            {pdfFiles.map((pdf, index) => (
-              <div key={index} style={{ border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}>
-                <h3>{pdf.title}</h3>
-                <button onClick={() => onSelectPDF(pdf.file)}>View PDF</button>
-              </div>
-            ))}
-          </div>
-        );
-      };
+
       
     return (
         <div className="container_racine">

@@ -1,0 +1,33 @@
+{
+  "students": [
+    {"name": "مجر إيمان", "position": [0, 0, "left"], "gender": ""},
+    {"name": "اكندو ليلى", "position": [0, 0, "right"], "gender": ""},
+    {"name": "ادميري كوثر", "position": [0, 1, "left"], "gender": ""},
+    {"name": "تلوحت كوثر", "position": [0, 1, "right"], "gender": ""},
+    {"name": "حاكور سلمى", "position": [0, 2, "left"], "gender": ""},
+    {"name": "احمو سناء", "position": [0, 2, "right"], "gender": ""},
+    {"name": "السعيد فاطمة الزهراء", "position": [0, 3, "left"], "gender": ""},
+    {"name": "منصوري نجوى", "position": [0, 3, "right"], "gender": ""},
+    {"name": "فارس عائشة", "position": [0, 4, "left"], "gender": ""},
+    {"name": "فارس هبة", "position": [0, 4, "right"], "gender": ""},
+    {"name": "لهراوي اميمة", "position": [0, 5, "left"], "gender": ""},
+    {"name": "قرواني دنيا", "position": [0, 5, "right"], "gender": ""},
+    {"name": "اجنا مريم", "position": [1, 0, "left"], "gender": ""},
+    {"name": "امساين هاجر", "position": [1, 0, "right"], "gender": ""},
+    {"name": "حفيظ أيوب", "position": [1, 1, "left"], "gender": "male"},
+    {"name": "بودادن بلال", "position": [1, 1, "right"], "gender": "male"},
+    {"name": "سائحين رضوان", "position": [1, 2, "left"], "gender": "male"},
+    {"name": "اكوتي محمد", "position": [1, 2, "right"], "gender": "male"},
+    {"name": "مساوي سليمان", "position": [1, 3, "left"], "gender": "male"},
+    {"name": "اعراب عبد الحي", "position": [1, 3, "right"], "gender": "male"},
+    {"name": "شاجيع محمد", "position": [1, 4, "left"], "gender": "male"},
+    {"name": "مساوي عبد الواحد", "position": [1, 4, "right"], "gender": "male"},
+    {"name": "لطيف محمد", "position": [1, 5, "left"], "gender": "male"},
+    {"name": "أيت المعطي سفيان", "position": [1, 5, "right"], "gender": "male"},
+    {"name": "اغرضان محمد", "position": [2, 0, "left"], "gender": "male"},
+    {"name": "عقدة كريم", "position": [2, 0, "right"], "gender": "male"},
+    {"name": "افقير مروان", "position": [2, 1, "left"], "gender": "male"},
+    {"name": "اكتي عبد المجيد", "position": [2, 1, "right"], "gender": "male"},
+    {"name": "اقاسي انس", "position": [2, 2, "left"], "gender": "male"}
+  ]
+}
