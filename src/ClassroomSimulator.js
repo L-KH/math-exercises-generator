@@ -77,7 +77,7 @@ const ClassroomSimulator = () => {
                 >
                   <div className="student-icon">{getStudentIcon(student.gender)}</div>
                   <div className="student-name">{student.name}</div>
-                  {/* <div className="student-note">Note: {student.note || 'N/A'}</div> */}
+                  
                 </div>
               </div>
             ))}
