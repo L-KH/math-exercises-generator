@@ -123,8 +123,8 @@ const MainPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Card>
-              <CardContent style={{ backgroundColor: 'rgb(173, 136, 39, 0.15)'}}>
+<Card>
+              <CardContent style={{ backgroundColor: 'rgb(255, 223, 0, 0.15)'}}>
                 <Typography variant="h5" gutterBottom>
                    Racines Carrées
                 </Typography>
@@ -133,18 +133,96 @@ const MainPage = () => {
                   Apprenez à simplifier des expressions contenant des puissances et des racines.
                 </Typography>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Button component={Link} to="/racines" variant="contained" style={{ backgroundColor: '#ad8827', flex: 1, marginRight: '5px' }}>
+                  <Button 
+                    component={Link} 
+                    to="/racines" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#FFD700', // Gold
+                      flex: 1, 
+                      marginRight: '5px',
+                      color: '#000', // Black text for better contrast
+                      '&:hover': {
+                        backgroundColor: '#DAA520' // Darker gold for hover
+                      }
+                    }}
+                  >
                     Exercices
                   </Button>
-                  <Button component={Link} to="/courses/racines" variant="contained" style={{ backgroundColor: '#2196F3', flex: 1, marginLeft: '5px' }}>
+                  <Button 
+                    component={Link} 
+                    to="/courses/racines" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#F4C430', // Saffron yellow
+                      flex: 1, 
+                      marginLeft: '5px',
+                      color: '#000', // Black text for better contrast
+                      '&:hover': {
+                        backgroundColor: '#DAA520' // Darker gold for hover
+                      }
+                    }}
+                  >
                     Cours
                   </Button>
-
                 </div>
               </CardContent>
             </Card>
           </motion.div>
         </Grid>
+        <Grid item xs={12} md={6}>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+<Card>
+              <CardContent style={{ backgroundColor: 'rgb(255, 152, 0, 0.15)'}}>
+                <Typography variant="h5" gutterBottom>
+                   Équations et Inéquations
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  Pratiquez la résolution d'équations et d'inéquations du premier degré.
+                  Apprenez à résoudre des problèmes concrets à l'aide d'équations.
+                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button 
+                    component={Link} 
+                    to="/equations-inequations" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#FF8C00', // Dark orange
+                      flex: 1, 
+                      marginRight: '5px',
+                      '&:hover': {
+                        backgroundColor: '#E67E00' // Slightly darker orange for hover
+                      }
+                    }}
+                  >
+                    Exercices
+                  </Button>
+                  <Button 
+                    component={Link} 
+                    to="/courses/equations" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#FFA533', // Lighter orange
+                      flex: 1, 
+                      marginLeft: '5px',
+                      '&:hover': {
+                        backgroundColor: '#FF9614' // Slightly darker for hover
+                      }
+                    }}
+                  >
+                    Cours
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+        
+
         <Grid item xs={12} md={6}>
           <AnimatedCard
             initial={{ opacity: 0, scale: 0.9 }}
@@ -177,6 +255,7 @@ const MainPage = () => {
               </CardInner>
             </Card>
           </AnimatedCard>
+          
         </Grid>
       </Grid>
     </div>

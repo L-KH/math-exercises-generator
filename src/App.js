@@ -16,7 +16,7 @@ import { Analytics } from '@vercel/analytics/react';
 import ClassroomSimulator from './ClassroomSimulator';
 import ClassSelector from './ClassSelector';
 import ExamGenerator from './ExamGenerator';
-
+import ExerciseGeneratorEquations from './ExercicesGenerator_equations'
 
 
 function App() {
@@ -69,6 +69,7 @@ function App() {
                 <Route path="/simulator/class/:classNumber" element={<ClassroomSimulator />} />
                 <Route path="/courses/:subject" element={<CoursesPage />} />
                 <Route path="/exam" element={<ExamGenerator />} />
+                <Route path="/equations-inequations" element={<ExerciseGeneratorEquations />} />
               </Routes>
             </div>
           </div>

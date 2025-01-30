@@ -23,7 +23,13 @@ const Exercise = ({ exercise, index }) => {
         <Typography variant="h6">Exercice {index + 1}</Typography>
         <Typography>
           <strong style={{ fontSize: '16px' }}>{exercise.questionText}</strong>
-          <BlockMath math={exercise.question} />
+          {exercise.isTextQuestion ? (
+            <Typography style={{ marginTop: '10px', marginBottom: '10px' }}>
+              {exercise.question}
+            </Typography>
+          ) : (
+            <BlockMath math={exercise.question} />
+          )}
         </Typography>
         <Button
           variant="contained"
