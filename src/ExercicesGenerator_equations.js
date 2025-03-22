@@ -1,8 +1,9 @@
-// ExercicesGenerator_equations.js
+// ExercicesGenerator_equations.js with responsive design
 import React, { useState, useCallback, useEffect } from 'react';
 import Exercise from './Exercise';
-import { Button, TextField, Grid, Card, CardContent } from '@mui/material';
+import { Button, TextField, Grid, Card, CardContent, useMediaQuery, useTheme } from '@mui/material';
 import ReactGA from 'react-ga4';
+import './ResponsiveMath.css'; // Add reference to our shared CSS file
 
 // ================ Helper Functions ================
 function randInt(min, max) {
@@ -43,6 +44,11 @@ function formatTerm(coefficient, variable = 'x', showPlus = false) {
     return `${sign}${coefficient}${variable}`;
 }
 
+// Format text in LaTeX to preserve spaces
+function formatText(text) {
+    return `\\text{${text}}`;
+}
+
 // ================ Exercise Creation Functions ================
 
 // Level 1: Basic Equations (ax = b or x + a = b)
@@ -62,7 +68,7 @@ function level1() {
         return {
             question: `${a}x = ${b}`,
             answer: `x = ${answer}`,
-            questionText: 'Résoudre l\'équation :'
+            questionText: `${formatText('Résoudre l\'équation :')}` 
         };
     } else {
         const a = randInt(-20, 20);
@@ -72,11 +78,10 @@ function level1() {
         return {
             question: `x ${a >= 0 ? '+' : ''} ${a} = ${b}`,
             answer: `x = ${b - a}`,
-            questionText: 'Résoudre l\'équation :'
+            questionText: `${formatText('Résoudre l\'équation :')}`
         };
     }
 }
-
 
 // Level 2: Equations with Addition/Subtraction (ax + b = c)
 function level2() {
@@ -92,7 +97,7 @@ function level2() {
     return {
         question: `${a}x ${b >= 0 ? '+' : ''} ${b} = ${c}`,
         answer: `x = ${answer}`,
-        questionText: 'Résoudre l\'équation :'
+        questionText: `${formatText('Résoudre l\'équation :')}`
     };
 }
 
@@ -106,9 +111,10 @@ function level3() {
     return {
         question: `${formatFraction(numerator + 'x', denominator)} = ${formatFraction(result, denominator)}`,
         answer: `x = ${x}`,
-        questionText: 'Résoudre l\'équation :'
+        questionText: `${formatText('Résoudre l\'équation :')}`
     };
 }
+
 // Level 4: Simple Inequations (ax + b ≤ c)
 function level4() {
     const a = randNonZeroInt(-10, 10);
@@ -130,7 +136,7 @@ function level4() {
     return {
         question: `${a}x ${b >= 0 ? '+' : ''} ${b} ${symbol} ${c}`,
         answer: `x ${finalSymbol} ${solution}`,
-        questionText: 'Résoudre l\'inéquation :'
+        questionText: `${formatText('Résoudre l\'inéquation :')}`
     };
 }
 
@@ -147,7 +153,7 @@ function level5() {
     return {
         question: `${a}x ${b >= 0 ? '+' : ''} ${b} = ${c}x ${d >= 0 ? '+' : ''} ${d}`,
         answer: `x = ${formatFraction(numerator, denominator)}`,
-        questionText: 'Résoudre l\'équation :'
+        questionText: `${formatText('Résoudre l\'équation :')}`
     };
 }
 
@@ -173,7 +179,7 @@ function level6() {
     return {
         question: `${formatFraction(`${numerator}x`, denominator)} ${b >= 0 ? '+' : ''} ${b} ${symbol} ${c}`,
         answer: `x ${finalSymbol} ${formatFraction(solNum, solDen)}`,
-        questionText: 'Résoudre l\'inéquation (fraction) :'
+        questionText: `${formatText('Résoudre l\'inéquation (fraction) :')}`
     };
 }
 
@@ -186,10 +192,10 @@ function level7() {
             const area = width * randInt(5, 15);
             const solution = area / width;
             return {
-                question: `Un rectangle a une largeur de ${width} mètres et une aire de ${area} mètres carrés. Quelle est sa longueur ?`,
+                question: `${formatText(`Un rectangle a une largeur de ${width} mètres et une aire de ${area} mètres carrés. Quelle est sa longueur ?`)}`,
                 answer: `x = ${solution}`,
-                steps: `1) Soit x la longueur du rectangle\n2) L'aire = largeur × longueur\n3) ${area} = ${width} × x\n4) x = ${solution}`,
-                questionText: 'Résoudre le problème en posant une équation :'
+                steps: `1) ${formatText(`Soit x la longueur du rectangle`)}\n2) ${formatText(`L'aire = largeur × longueur`)}\n3) ${area} = ${width} × x\n4) x = ${solution}`,
+                questionText: `${formatText('Résoudre le problème en posant une équation :')}`
             };
         },
         // Age problem
@@ -198,10 +204,10 @@ function level7() {
             const yearsPast = randInt(5, 15);
             const pastAge = currentAge - yearsPast;
             return {
-                question: "Il y a " + yearsPast + " ans, l'âge d'une personne était de " + pastAge + " ans. Quel est son âge actuel ?",
-                answer: "x = " + currentAge,
-                steps: "1) Soit x l'âge actuel\n2) Il y a " + yearsPast + " ans : x - " + yearsPast + " = " + pastAge + "\n3) x = " + currentAge,
-                questionText: "Résoudre le problème en posant une équation :"
+                question: `${formatText(`Il y a ${yearsPast} ans, l'âge d'une personne était de ${pastAge} ans. Quel est son âge actuel ?`)}`,
+                answer: `x = ${currentAge}`,
+                steps: `1) ${formatText(`Soit x l'âge actuel`)}\n2) ${formatText(`Il y a ${yearsPast} ans : x - ${yearsPast} = ${pastAge}`)}\n3) x = ${currentAge}`,
+                questionText: `${formatText('Résoudre le problème en posant une équation :')}`
             };
         },
         // Distance/Speed/Time problem
@@ -210,10 +216,10 @@ function level7() {
             const time = randInt(1, 5);
             const distance = speed * time;
             return {
-                question: "Une voiture roule à " + speed + " km/h pendant " + time + " heures. Quelle distance a-t-elle parcourue ?",
-                answer: "x = " + distance,
-                steps: "1) Soit x la distance parcourue\n2) distance = vitesse × temps\n3) x = " + speed + " × " + time + "\n4) x = " + distance,
-                questionText: "Résoudre le problème en posant une équation :"
+                question: `${formatText(`Une voiture roule à ${speed} km/h pendant ${time} heures. Quelle distance a-t-elle parcourue ?`)}`,
+                answer: `x = ${distance}`,
+                steps: `1) ${formatText(`Soit x la distance parcourue`)}\n2) ${formatText(`distance = vitesse × temps`)}\n3) x = ${speed} × ${time}\n4) x = ${distance}`,
+                questionText: `${formatText('Résoudre le problème en posant une équation :')}`
             };
         },
         // Number problem
@@ -221,10 +227,10 @@ function level7() {
             const number = randInt(10, 50);
             const triple = number * 3;
             return {
-                question: `Le triple d'un nombre est égal à ${triple}. Quel est ce nombre ?`,
+                question: `${formatText(`Le triple d'un nombre est égal à ${triple}. Quel est ce nombre ?`)}`,
                 answer: `x = ${number}`,
-                steps: `1) Soit x le nombre cherché\n2) 3x = ${triple}\n3) x = ${number}`,
-                questionText: 'Résoudre le problème en posant une équation :'
+                steps: `1) ${formatText(`Soit x le nombre cherché`)}\n2) 3x = ${triple}\n3) x = ${number}`,
+                questionText: `${formatText('Résoudre le problème en posant une équation :')}`
             };
         },
         // Money/Price problem
@@ -233,10 +239,10 @@ function level7() {
             const total = unitPrice * randInt(5, 15);
             const quantity = total / unitPrice;
             return {
-                question: "Des articles coûtent " + unitPrice + " euros chacun. Le total est de " + total + " euros. Combien d'articles ont été achetés ?",
-                answer: "x = " + quantity,
-                steps: "1) Soit x le nombre d'articles\n2) " + unitPrice + "x = " + total + "\n3) x = " + quantity,
-                questionText: "Résoudre le problème en posant une équation :"
+                question: `${formatText(`Des articles coûtent ${unitPrice} euros chacun. Le total est de ${total} euros. Combien d'articles ont été achetés ?`)}`,
+                answer: `x = ${quantity}`,
+                steps: `1) ${formatText(`Soit x le nombre d'articles`)}\n2) ${unitPrice}x = ${total}\n3) x = ${quantity}`,
+                questionText: `${formatText('Résoudre le problème en posant une équation :')}`
             };
         }
     ];
@@ -247,7 +253,7 @@ function level7() {
 // Level 8: Word Problems - Inequations
 function level8() {
     const problemTypes = [
-        // Subscription comparison (fixed template literals)
+        // Subscription comparison
         () => {
             const rateA = randInt(5, 15);
             const fixedFeeB = randInt(50, 150);
@@ -255,23 +261,23 @@ function level8() {
             const breakEvenSessions = Math.ceil(fixedFeeB / (rateA - rateB));
             
             return {
-                question: `Le tarif A coûte ${rateA} € par séance. Le tarif B a un abonnement annuel de ${fixedFeeB} € plus ${rateB} € par séance. À partir de combien de séances le tarif B devient-il plus économique ?`,
+                question: `${formatText(`Le tarif A coûte ${rateA} € par séance. Le tarif B a un abonnement annuel de ${fixedFeeB} € plus ${rateB} € par séance. À partir de combien de séances le tarif B devient-il plus économique ?`)}`,
                 answer: `x > ${breakEvenSessions}`,
-                steps: `1) Soit x le nombre de séances\n2) Tarif A: ${rateA}x\n3) Tarif B: ${fixedFeeB} + ${rateB}x\n4) ${rateB}x + ${fixedFeeB} < ${rateA}x\n5) ${fixedFeeB} < ${rateA - rateB}x\n6) x > ${breakEvenSessions}`,
-                questionText: 'Résoudre le problème en posant une inéquation :'
+                steps: `1) ${formatText(`Soit x le nombre de séances`)}\n2) ${formatText(`Tarif A: ${rateA}x`)}\n3) ${formatText(`Tarif B: ${fixedFeeB} + ${rateB}x`)}\n4) ${rateB}x + ${fixedFeeB} < ${rateA}x\n5) ${fixedFeeB} < ${rateA - rateB}x\n6) x > ${breakEvenSessions}`,
+                questionText: `${formatText('Résoudre le problème en posant une inéquation :')}`
             };
         },
-        // Budget constraint (improved spacing)
+        // Budget constraint
         () => {
             const budget = randInt(50, 200);
             const itemCost = randInt(5, 20);
             const maxItems = Math.floor(budget / itemCost);
             
             return {
-                question: `Avec un budget de ${budget} €, combien d'articles à ${itemCost} € peut-on acheter au maximum ?`,
+                question: `${formatText(`Avec un budget de ${budget} €, combien d'articles à ${itemCost} € peut-on acheter au maximum ?`)}`,
                 answer: `x ≤ ${maxItems}`,
-                steps: `1) Soit x le nombre d'articles\n2) Prix total: ${itemCost}x\n3) Budget maximum: ${budget}\n4) ${itemCost}x ≤ ${budget}\n5) x ≤ ${maxItems}`,
-                questionText: 'Résoudre le problème en posant une inéquation :'
+                steps: `1) ${formatText(`Soit x le nombre d'articles`)}\n2) ${formatText(`Prix total: ${itemCost}x`)}\n3) ${formatText(`Budget maximum: ${budget}`)}\n4) ${itemCost}x ≤ ${budget}\n5) x ≤ ${maxItems}`,
+                questionText: `${formatText('Résoudre le problème en posant une inéquation :')}`
             };
         }
     ];
@@ -291,8 +297,8 @@ function level9() {
 
     return {
         question: `(${a}x ${b >= 0 ? '+' : ''} ${b})(${c}x ${d >= 0 ? '+' : ''} ${d}) = 0`,
-        answer: `x = ${formatFraction(sol1Num, sol1Den)} ou x = ${formatFraction(sol2Num, sol2Den)}`,
-        questionText: 'Résoudre l\'équation (produit nul) :'
+        answer: `x = ${formatFraction(sol1Num, sol1Den)} ${formatText('ou')} x = ${formatFraction(sol2Num, sol2Den)}`,
+        questionText: `${formatText('Résoudre l\'équation (produit nul) :')}`
     };
 }
 
@@ -334,7 +340,7 @@ function createExercise(level) {
 
     return {
         ...exercise,
-        questionText: exercise.questionText || 'Résoudre :',
+        questionText: exercise.questionText || `${formatText('Résoudre :')}`,
         level // Add level to help with re-rendering
     };
 }
@@ -345,6 +351,8 @@ function ExerciseGeneratorEquations() {
     const [numExercises, setNumExercises] = useState(10);
     const [level, setLevel] = useState(1);
     const [exerciseKey, setExerciseKey] = useState(0);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const startTime = new Date();
@@ -400,105 +408,101 @@ function ExerciseGeneratorEquations() {
     };
 
     return (
-        <div className="container_equations">
+        <div className="container_equations responsive-container">
         <Card sx={{ 
             mb: 0.4, 
             p: 0.2,
-            fontFamily: 'Arial, sans-serif', // Added font family
+            fontFamily: 'Arial, sans-serif',
             overflow: 'hidden' 
         }}>
             <CardContent style={{ 
                 backgroundColor: 'rgb(255, 152, 0, 0.1)',
                 wordWrap: 'break-word' 
             }}>
-                    <h1 style={{ color: '#E65100' }}>Générateur d'Exercices - Équations et Inéquations</h1>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                type="number"
-                                value={numExercises}
-                                onChange={(e) => setNumExercises(Number(e.target.value))}
-                                label="Nombre d'Exercices"
-                                sx={{
-                                    '& label.Mui-focused': {
-                                        color: '#FF9800',
+                <h1 className="responsive-heading" style={{ color: '#E65100' }}>
+                    {formatText('Générateur d\'Exercices - Équations et Inéquations')}
+                </h1>
+                <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            fullWidth
+                            type="number"
+                            value={numExercises}
+                            onChange={(e) => setNumExercises(Number(e.target.value))}
+                            label="Nombre d'Exercices"
+                            sx={{
+                                '& label.Mui-focused': {
+                                    color: '#FF9800',
+                                },
+                                '& .MuiOutlinedInput-root': {
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#FF9800',
                                     },
-                                    '& .MuiOutlinedInput-root': {
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: '#FF9800',
-                                        },
-                                    },
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <div className="level-buttons" style={{ textAlign: 'center', marginTop: '20px' }}>
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map((lvl) => (
-                                    <Button
-                                        key={lvl}
-                                        onClick={() => handleLevelChange(lvl)}
-                                        variant="contained"
-                                        style={{
-                                            margin: '5px',
-                                            backgroundColor: levelColors[lvl],
-                                            color: lvl > 5 ? '#fff' : '#000',
-                                            '&:hover': {
-                                                backgroundColor: levelColors[lvl + 1]
-                                            }
-                                        }}
-                                    >
-                                        Niveau {lvl}
-                                    </Button>
-                                ))}
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <div style={{ marginTop: '20px' }}>
-                        <Button 
-                            variant="contained" 
-                            onClick={() => generateExercises()}
-                            style={{
-                                backgroundColor: '#FF9800',
-                                color: '#fff',
-                                '&:hover': {
-                                    backgroundColor: '#F57C00'
-                                }
+                                },
                             }}
-                        >
-                            Générer les Exercices
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-            <div id="exercise-container" key={exerciseKey}>
-                {exercises.map((exercise, index) => (
-                    <Exercise 
-                        key={`${exercise.id}-${exercise.level}`}
-                        exercise={exercise} 
-                        index={index} 
-                    />
-                ))}
-            </div>
-            {exercises.length > 0 && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <div className="level-buttons" style={{ textAlign: 'center', marginTop: '20px' }}>
+                            {[1, 2, 3, 4, 5, 6, 7, 8].map((lvl) => (
+                                <Button
+                                    key={lvl}
+                                    onClick={() => handleLevelChange(lvl)}
+                                    variant="contained"
+                                    style={{
+                                        margin: isMobile ? '3px' : '5px',
+                                        padding: isMobile ? '6px 12px' : '10px 20px',
+                                        backgroundColor: levelColors[lvl],
+                                        color: lvl > 5 ? '#fff' : '#000',
+                                        fontSize: isMobile ? '0.85rem' : '1rem',
+                                    }}
+                                >
+                                    Niveau {lvl}
+                                </Button>
+                            ))}
+                        </div>
+                    </Grid>
+                </Grid>
+                <div style={{ marginTop: '20px' }}>
                     <Button 
-                        variant="outlined" 
-                        onClick={() => window.print()}
+                        variant="contained" 
+                        onClick={() => generateExercises()}
+                        className="generate-button"
                         style={{
-                            color: '#FF9800',
-                            borderColor: '#FF9800',
-                            '&:hover': {
-                                borderColor: '#F57C00',
-                                color: '#F57C00'
-                            }
+                            backgroundColor: '#FF9800',
+                            color: '#fff',
                         }}
                     >
-                        Imprimer les Exercices
+                        Générer les Exercices
                     </Button>
                 </div>
-            )}
+            </CardContent>
+        </Card>
+        <div id="exercise-container" className="responsive-exercise-container" key={exerciseKey}>
+            {exercises.map((exercise, index) => (
+                <Exercise 
+                    key={`${exercise.id}-${exercise.level}`}
+                    exercise={exercise} 
+                    index={index}
+                    className="responsive-exercise" 
+                />
+            ))}
         </div>
+        {exercises.length > 0 && (
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                <Button 
+                    variant="outlined" 
+                    onClick={() => window.print()}
+                    style={{
+                        color: '#FF9800',
+                        borderColor: '#FF9800',
+                    }}
+                >
+                    Imprimer les Exercices
+                </Button>
+            </div>
+        )}
+    </div>
     );
 }
 export default ExerciseGeneratorEquations;

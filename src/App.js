@@ -1,4 +1,4 @@
-// App.js
+// App.js (Updated with Repère dans le Plan)
 import React, { useState, useMemo, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,6 +9,7 @@ import CoursesPage from './CoursesPage';
 import ExerciseGenerator from './ExerciseGenerator';
 import ExerciseGeneratorPuissance from './ExercicesGenerator_puissance&racine';
 import ExercicesGenerator_racines from './ExercicesGenerator_racines';
+import ExerciseGeneratorPlan from './ExercicesGenerator_plan'; // Import the new component
 import Navbar from './Navbar';
 import './App.css';
 import ReactGA from 'react-ga4';
@@ -65,6 +66,7 @@ function App() {
                 <Route path="/developpement-factorisation" element={<ExerciseGenerator />} />
                 <Route path="/puissances-racines" element={<ExerciseGeneratorPuissance />} />
                 <Route path="/racines" element={<ExercicesGenerator_racines />} />
+                <Route path="/repere-plan" element={<ExerciseGeneratorPlan />} /> {/* Add new route */}
                 <Route path="/simulator" element={<ClassSelector />} />
                 <Route path="/simulator/class/:classNumber" element={<ClassroomSimulator />} />
                 <Route path="/courses/:subject" element={<CoursesPage />} />

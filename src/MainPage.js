@@ -1,4 +1,4 @@
-// MainPage.js
+// MainPage.js (Updated with Repère dans le Plan)
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, Typography, Button, Grid } from '@mui/material';
@@ -70,7 +70,7 @@ const MainPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Card>
-              <CardContent style={{ backgroundColor: 'rgb(32, 69, 137, 0.15)'}}>
+            <CardContent style={{ backgroundColor: 'rgb(204, 0, 0, 0.15)'}}>
                 <Typography variant="h5" gutterBottom>
                   Développement et Factorisation
                 </Typography>
@@ -119,11 +119,11 @@ const MainPage = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
           >
-<Card>
+            <Card>
               <CardContent style={{ backgroundColor: 'rgb(255, 223, 0, 0.15)'}}>
                 <Typography variant="h5" gutterBottom>
                    Racines Carrées
@@ -170,11 +170,12 @@ const MainPage = () => {
             </Card>
           </motion.div>
         </Grid>
+        
         <Grid item xs={12} md={6}>
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
           >
 <Card>
               <CardContent style={{ backgroundColor: 'rgb(255, 152, 0, 0.15)'}}>
@@ -221,13 +222,63 @@ const MainPage = () => {
             </Card>
           </motion.div>
         </Grid>
-        
+        <Grid item xs={12} md={6}>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <Card>
+              <CardContent style={{ backgroundColor: 'rgb(0, 128, 192, 0.15)'}}>
+                <Typography variant="h5" gutterBottom>
+                   Repère dans le Plan
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  Pratiquez le calcul de vecteurs, distances, et points dans le plan. 
+                  Maîtrisez la géométrie analytique et les propriétés des figures géométriques.
+                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button 
+                    component={Link} 
+                    to="/repere-plan" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#0080C0', // Blue
+                      flex: 1, 
+                      marginRight: '5px',
+                      '&:hover': {
+                        backgroundColor: '#006699' // Darker blue for hover
+                      }
+                    }}
+                  >
+                    Exercices
+                  </Button>
+                  <Button 
+                    component={Link} 
+                    to="/courses/repere-plan" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#40A0D0', // Lighter blue
+                      flex: 1, 
+                      marginLeft: '5px',
+                      '&:hover': {
+                        backgroundColor: '#3090C0' // Slightly darker for hover
+                      }
+                    }}
+                  >
+                    Cours
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
 
         <Grid item xs={12} md={6}>
           <AnimatedCard
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
           >
             <Card>
               <CardInner>

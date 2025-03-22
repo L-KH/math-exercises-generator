@@ -1,9 +1,10 @@
-// ExercicesGenerator_racines.js
+// ExercicesGenerator_racines.js with responsive design
 
 import React, { useState, useCallback, useEffect} from 'react';
-import Exercise from './Exercise'; // Ensure this component renders MathJax expressions
-import { Button, TextField, Grid, Card, CardContent, Dialog, Typography  } from '@mui/material';
+import Exercise from './Exercise'; 
+import { Button, TextField, Grid, Card, CardContent, Dialog, Typography, useMediaQuery, useTheme } from '@mui/material';
 import ReactGA from 'react-ga4';
+import './ResponsiveMath.css';
 
 // Helper functions
 function randInt(min, max) {
@@ -23,16 +24,21 @@ function isPerfectSquare(n) {
     return Number.isInteger(Math.sqrt(n));
 }
 
+// Format text in LaTeX to preserve spaces
+function formatText(text) {
+    return `\\text{${text}}`;
+}
+
 // Main Exercise Generator function
 function createExercise(level) {
     let exercise = {};
-    let questionText = 'Calculer :';
+    let questionText = `${formatText('Calculer :')}`;
 
     exercise = createRacineExercise(level);
 
     // Adjust question text for Level 3
     if (level === 3) {
-        questionText = 'Écrire avec un dénominateur entier :';
+        questionText = `${formatText('Écrire avec un dénominateur entier :')}`;
     }
 
     return { ...exercise, questionText };
@@ -173,7 +179,6 @@ function racineLevel2() {
     return randChoice(operations).generate();
 }
 
-// Level 2+: Addition and Subtraction of radicals
 // Level 2+: Addition and Subtraction of radicals (Remarkable Identities)
 function racineLevel2plus() {
     const operations = [
@@ -228,8 +233,6 @@ function racineLevel2plus() {
 
     return randChoice(operations)();
 }
-
-
 
 // Level 3: Rationalize denominators with a single term
 function racineLevel3() {
@@ -395,7 +398,6 @@ function racineLevel7() {
     return { question, answer };
 }
 
-// Level 8: Diversification of previous levels with increased difficulty
 // Level 8: Diversification of previous levels with increased difficulty
 function racineLevel8() {
     const operations = [
@@ -573,7 +575,7 @@ function racineLevel8() {
         exercise = randChoice(operations)();
     }
     exercise.level = 8;
-    exercise.questionText = "Simplifiez l'expression suivante :";
+    exercise.questionText = `${formatText("Simplifiez l'expression suivante :")}`;
     return exercise;
 }
 
@@ -658,20 +660,14 @@ function simplifySquareRootWithCoeff(coeff, radicand) {
     };
 }
 
-// Helper function to compute expressions (for Level 8)
-function computeExpression(expression) {
-    // This is a placeholder. Implementing a full math parser is beyond the scope.
-    // In practice, you could use math.js or another library to evaluate expressions.
-    return 'Simplify the expression step by step.';
-}
-
 // Main component
 function ExerciseGeneratorRacines() {
     const [exercises, setExercises] = useState([]);
     const [numExercises, setNumExercises] = useState(10);
     const [level, setLevel] = useState(1);
     const [showPDFGallery, setShowPDFGallery] = useState(false);
-
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const startTime = new Date();
@@ -685,7 +681,7 @@ function ExerciseGeneratorRacines() {
             value: Math.round(timeSpent)
           });
         };
-      }, []);
+    }, []);
 
     const generateExercises = useCallback((selectedLevel = level) => {
         const newExercises = [];
@@ -694,13 +690,12 @@ function ExerciseGeneratorRacines() {
         }
         setExercises(newExercises);
         ReactGA.event({
-        category: 'Exercise',
-        action: 'Generate',
-        label: `Level ${selectedLevel}`,
-        value: numExercises
-    });
+            category: 'Exercise',
+            action: 'Generate',
+            label: `Level ${selectedLevel}`,
+            value: numExercises
+        });
     }, [numExercises, level]);
-
 
     // Level colors for buttons
     const levelColors = {
@@ -715,13 +710,14 @@ function ExerciseGeneratorRacines() {
         8: '#002966',
         'EQ': '#800080', // Purple color for equations level
     };
-
       
     return (
-        <div className="container_racine">
+        <div className="container_racine responsive-container">
             <Card sx={{ mb: 0.4, p: 0.2 }}>
                 <CardContent style={{ backgroundColor: 'rgb(173, 136, 39, 0.25)'}}>
-                    <h1>Générateur d'Exercices - Les Racines Carrées</h1>
+                    <h1 className="responsive-heading">
+                        {formatText('Générateur d\'Exercices - Les Racines Carrées')}
+                    </h1>
                     <Grid container spacing={2} alignItems="center">
                         <Grid item xs={12} sm={6} md={4}>
                             <TextField
@@ -733,7 +729,7 @@ function ExerciseGeneratorRacines() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <div className="level-buttons" style={{ textAlign: 'center', marginTop: '20px' }}>
+                            <div className="level-buttons responsive-buttons" style={{ textAlign: 'center', marginTop: '20px' }}>
                                 {[1, 2, '2plus', 3, 4, 5, 6, 7, 8, 'EQ'].map((lvl) => (
                                     <Button
                                         key={lvl}
@@ -743,9 +739,11 @@ function ExerciseGeneratorRacines() {
                                         }}
                                         variant="contained"
                                         style={{
-                                            margin: '5px',
+                                            margin: isMobile ? '3px' : '5px',
+                                            padding: isMobile ? '6px 12px' : '10px 20px',
                                             backgroundColor: levelColors[lvl],
                                             color: '#fff',
+                                            fontSize: isMobile ? '0.85rem' : '1rem',
                                         }}
                                     >
                                         Niveau {lvl === '2plus' ? '2+' : lvl === 'EQ' ? 'EQ (Équations)' : lvl}
@@ -755,24 +753,35 @@ function ExerciseGeneratorRacines() {
                         </Grid>
                     </Grid>
                     <div style={{ marginTop: '20px' }}>
-                        <Button variant="contained" onClick={() => generateExercises(level)}>Générer les Exercices</Button>
+                        <Button 
+                            variant="contained" 
+                            onClick={() => generateExercises(level)}
+                            className="generate-button"
+                        >
+                            Générer les Exercices
+                        </Button>
                     </div>
                 </CardContent>
             </Card>
-            <div id="exercise-container">
-            {exercises.map((exercise, index) => (
-                <Exercise key={exercise.id} exercise={exercise} index={index} />
-            ))}
-
+            <div id="exercise-container" className="responsive-exercise-container">
+                {exercises.map((exercise, index) => (
+                    <Exercise 
+                        key={exercise.id} 
+                        exercise={exercise} 
+                        index={index} 
+                        className="responsive-exercise"
+                    />
+                ))}
             </div>
             {exercises.length > 0 && (
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <Button variant="outlined" onClick={() => window.print()}>Imprimer les Exercices</Button>
+                    <Button variant="outlined" onClick={() => window.print()}>
+                        Imprimer les Exercices
+                    </Button>
                 </div>
             )}
-
-    </div>
-  );
-};
+        </div>
+    );
+}
 
 export default ExerciseGeneratorRacines;

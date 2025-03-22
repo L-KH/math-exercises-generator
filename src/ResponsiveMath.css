@@ -1,0 +1,176 @@
+/* ResponsiveMath.css - Shared responsive styles for math exercise generators */
+
+.responsive-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+  }
+  
+  .responsive-heading {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .responsive-exercise-container {
+    margin-top: 30px;
+  }
+  
+  /* Make math formulas responsive */
+  .exercise .mjx-chtml {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding-bottom: 5px; /* Space for scrollbar */
+  }
+  
+  .exercise .katex {
+    font-size: 1.1em;
+    white-space: normal;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  .exercise .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 5px; /* Space for scrollbar */
+  }
+  
+  /* For longer formulas that might break layout */
+  .exercise p {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  
+  .exercise .mjx-math {
+    max-width: 100%;
+  }
+  
+  /* Button styles for better mobile experience */
+  .level-button, 
+  .generate-button {
+    transition: all 0.3s ease;
+  }
+  
+  .level-button:hover,
+  .generate-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .generate-button {
+    padding: 10px 20px;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  
+  /* Special handling for horizontal scrolling on complex equations */
+  .complex-equation-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 10px;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  /* Ensure Exercise component is responsive */
+  .responsive-exercise {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Level buttons specifically */
+  .responsive-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Container colors */
+  .container_racine {
+    background-color: rgba(173, 136, 39, 0.15);
+  }
+  
+  .container_equations {
+    background-color: rgba(255, 152, 0, 0.15);
+  }
+  .container_plan {
+    background-color: rgba(204, 0, 0, 0.15);
+  }
+  .container_puissance {
+    background-color: rgba(66, 43, 152, 0.15);
+  }
+  
+  /* For very small devices */
+  @media screen and (max-width: 360px) {
+    .responsive-heading {
+      font-size: 1.5rem;
+    }
+    
+    .exercise {
+      padding: 15px;
+    }
+    
+    .exercise p {
+      font-size: 0.9rem;
+    }
+    
+    .katex, .mjx-chtml {
+      font-size: 0.9em !important;
+    }
+  }
+  
+  /* Small devices */
+  @media screen and (max-width: 600px) {
+    .responsive-container {
+      padding: 15px;
+    }
+    
+    .responsive-heading {
+      font-size: 1.6rem;
+    }
+    
+    .exercise {
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .katex, .mjx-chtml {
+      font-size: 1em !important;
+    }
+    
+    /* Adjust level buttons for mobile */
+    .responsive-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .responsive-buttons button {
+      margin: 3px !important;
+      padding: 6px 12px !important;
+      font-size: 0.85rem !important;
+    }
+  }
+  
+  /* Improve readability for fractions in LaTeX */
+  .katex .mfrac .frac-line {
+    border-bottom-width: 0.08em;
+  }
+  
+  .katex .mord.mtight {
+    font-size: 0.8em;
+  }
+  
+  /* Prevent overflow for long equations */
+  .mjx-container {
+    min-width: 0 !important;
+  }
