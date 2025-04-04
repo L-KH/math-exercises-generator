@@ -6,6 +6,7 @@ export function generateExam() {
         generateExercise2(),
         generateExercise3(),
         generateExercise4(),
+        generateExercise5(),
       ],
     };
   }
@@ -163,9 +164,113 @@ export function generateExam() {
     };
   }
   
+  function generateExercise5() {
+    // Exercise 5: Linear equations and their graphs
+    const expressions = [];
+    const answers = [];
+    
+    // Question 1: Find the equation of a line passing through two points
+    const x1 = getRandomInt(-5, 5);
+    const y1 = getRandomInt(-5, 5);
+    const x2 = getRandomInt(-5, 5);
+    let y2 = getRandomInt(-5, 5);
+    
+    // Ensure x2 ≠ x1 (avoiding vertical lines)
+    while (x2 === x1) {
+      y2 = getRandomInt(-5, 5);
+    }
+    
+    // Calculate slope
+    const numerator = y2 - y1;
+    const denominator = x2 - x1;
+    const { numerator: slopeNum, denominator: slopeDenom } = simplifyFraction(numerator, denominator);
+    
+    // Calculate y-intercept
+    const slope = slopeNum / slopeDenom;
+    const b = y1 - slope * x1;
+    const { numerator: interceptNum, denominator: interceptDenom } = simplifyFraction(Math.round(b * slopeDenom), slopeDenom);
+    
+    const formattedSlope = slopeDenom === 1 ? slopeNum : formatFractionLatex(slopeNum, slopeDenom);
+    const formattedIntercept = interceptDenom === 1 ? interceptNum : formatFractionLatex(interceptNum, interceptDenom);
+    
+    // Construct the equation
+    const signIntercept = interceptNum >= 0 ? '+' : '';
+    const finalIntercept = interceptNum === 0 ? '' : `${signIntercept} ${formattedIntercept}`;
+    
+    const questionText = `(a)\\quad \\text{Déterminer l'équation de la droite passant par les points } A${formatPoint(x1, y1)} \\text{ et } B${formatPoint(x2, y2)}`;
+    const answerText = `\\text{La pente est } m = ${formattedSlope} \\\\\n        \\text{Utilisant l'équation } y - y_1 = m(x - x_1): \\\\\n        y - ${y1} = ${formattedSlope}(x - ${x1}) \\\\\n        y = ${formattedSlope}x ${finalIntercept}`;
+    
+    expressions.push({ expression: questionText });
+    answers.push({ expression: answerText });
+    
+    // Question 2: Convert general form to slope-intercept form
+    const a2 = getRandomInt(-5, 5);
+    const c2 = getRandomInt(-5, 5);
+    const d2 = getRandomInt(-5, 5);
+    
+    // Create general form equation ax + by + c = 0
+    // Ensure b is not 0 to avoid vertical lines
+    const b2 = getRandomInt(1, 5) * (Math.random() < 0.5 ? -1 : 1);
+    
+    // Calculate slope and y-intercept for the answer
+    const slope2 = -a2 / b2;
+    const yIntercept = -c2 / b2;
+    
+    // Simplify the slope and y-intercept fractions
+    const { numerator: slopeNum2, denominator: slopeDenom2 } = simplifyFraction(-a2, b2);
+    const { numerator: interceptNum2, denominator: interceptDenom2 } = simplifyFraction(-c2, b2);
+    
+    const formattedSlope2 = slopeDenom2 === 1 ? slopeNum2 : formatFractionLatex(slopeNum2, slopeDenom2);
+    const formattedIntercept2 = interceptDenom2 === 1 ? interceptNum2 : formatFractionLatex(interceptNum2, interceptDenom2);
+    
+    const signB2 = b2 > 0 ? '+' : '';
+    const signC2 = c2 > 0 ? '+' : '';
+    const question2Text = `(b)\\quad \\text{Convertir l'équation } ${a2}x ${signB2} ${b2}y ${signC2} ${c2} = 0 \\text{ sous la forme } y = mx + n`;
+    
+    // Construct the answer
+    const signIntercept2 = interceptNum2 >= 0 ? '+' : '';
+    const finalIntercept2 = interceptNum2 === 0 ? '' : `${signIntercept2} ${formattedIntercept2}`;
+    
+    const answer2Text = `${a2}x ${signB2} ${b2}y ${signC2} ${c2} = 0 \\\\\n        ${b2}y = -${a2}x - ${c2} \\\\\n        y = ${formattedSlope2}x ${finalIntercept2}`;
+    
+    expressions.push({ expression: question2Text });
+    answers.push({ expression: answer2Text });
+    
+    return {
+      questionText: '5) Équation d\'une droite : (2 × 2 pts)',
+      questions: expressions,
+      answers: answers,
+      points: 4,
+    };
+  }
+  
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
   
-  export default { generateExam };
+  // Helper function to format a point
+  function formatPoint(x, y) {
+    return `(${x}, ${y})`;
+  }
   
+  // Helper function to simplify fractions
+  function simplifyFraction(numerator, denominator) {
+    // Calculate GCD
+    const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
+    const divisor = gcd(numerator, denominator);
+    
+    return {
+      numerator: numerator / divisor,
+      denominator: denominator / divisor
+    };
+  }
+  
+  // Helper function to format a fraction for display
+  function formatFractionLatex(numerator, denominator) {
+    if (denominator === 1) return `${numerator}`;
+    if (numerator === 0) return '0';
+    
+    return `\\frac{${numerator}}{${denominator}}`;
+  }
+  
+  export default { generateExam };

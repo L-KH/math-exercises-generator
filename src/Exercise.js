@@ -14,6 +14,26 @@ const Exercise = ({ exercise, index, className }) => {
     setShowAnswer(false);
   }, [exercise]);
 
+  // Helper function to handle SVG content
+  const renderAnswer = () => {
+    if (exercise.answer.includes('svg-container')) {
+      // Split at the double backslash followed by SVG content
+      const parts = exercise.answer.split('\\\\');
+      return (
+        <div>
+          <BlockMath math={parts[0]} />
+          <div 
+            dangerouslySetInnerHTML={{ 
+              __html: parts[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>') 
+            }} 
+          />
+        </div>
+      );
+    } else {
+      return <BlockMath math={exercise.answer} />;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -89,7 +109,7 @@ const Exercise = ({ exercise, index, className }) => {
             <Typography component="div">
               <strong style={{ fontSize: isMobile ? '0.9rem' : '1rem' }}>Réponse :</strong>
               <div className="complex-equation-container">
-                <BlockMath math={exercise.answer} />
+                {renderAnswer()}
               </div>
             </Typography>
           </div>

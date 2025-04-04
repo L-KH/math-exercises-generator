@@ -275,10 +275,62 @@ const MainPage = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            <Card>
+              <CardContent style={{ backgroundColor: 'rgba(102, 187, 106, 0.15)'}}>
+                <Typography variant="h5" gutterBottom>
+                   Équation d'une droite
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  Apprenez à tracer et analyser des droites dans un repère cartésien.
+                  Maîtrisez les différentes formes d'équations de droites et leur représentation graphique.
+                </Typography>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button 
+                    component={Link} 
+                    to="/equation-droite" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#4CAF50', // Green
+                      flex: 1, 
+                      marginRight: '5px',
+                      '&:hover': {
+                        backgroundColor: '#388E3C' // Darker green for hover
+                      }
+                    }}
+                  >
+                    Exercices
+                  </Button>
+                  <Button 
+                    component={Link} 
+                    to="/courses/equation-droite" 
+                    variant="contained" 
+                    style={{ 
+                      backgroundColor: '#66BB6A', // Lighter green
+                      flex: 1, 
+                      marginLeft: '5px',
+                      '&:hover': {
+                        backgroundColor: '#4CAF50' // Slightly darker for hover
+                      }
+                    }}
+                  >
+                    Cours
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
           <AnimatedCard
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 1.0 }}
           >
             <Card>
               <CardInner>

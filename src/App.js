@@ -18,6 +18,7 @@ import ClassroomSimulator from './ClassroomSimulator';
 import ClassSelector from './ClassSelector';
 import ExamGenerator from './ExamGenerator';
 import ExerciseGeneratorEquations from './ExercicesGenerator_equations'
+import ExerciseGeneratorDroite from './ExercicesGenerator_droite'
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
                 <Route path="/courses/:subject" element={<CoursesPage />} />
                 <Route path="/exam" element={<ExamGenerator />} />
                 <Route path="/equations-inequations" element={<ExerciseGeneratorEquations />} />
+                <Route path="/equation-droite" element={<ExerciseGeneratorDroite />} />
               </Routes>
             </div>
           </div>

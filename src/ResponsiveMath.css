@@ -94,6 +94,20 @@
     justify-content: center;
   }
   
+  /* Special styling for SVG containers */
+  .svg-container {
+    margin: 20px auto;
+    max-width: 100%;
+    overflow-x: auto;
+    text-align: center;
+  }
+  
+  .svg-container svg {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+  }
+  
   /* Container colors */
   .container_racine {
     background-color: rgba(173, 136, 39, 0.15);
@@ -102,11 +116,17 @@
   .container_equations {
     background-color: rgba(255, 152, 0, 0.15);
   }
+  
   .container_plan {
     background-color: rgba(204, 0, 0, 0.15);
   }
+  
   .container_puissance {
     background-color: rgba(66, 43, 152, 0.15);
+  }
+  
+  .container_droite {
+    background-color: rgba(76, 175, 80, 0.15);
   }
   
   /* For very small devices */
